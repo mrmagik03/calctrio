@@ -35,6 +35,8 @@ function formatInputCurrency(value: string) {
   });
 }
 
+const quickExamples = [40000, 50000, 60000, 75000, 100000, 120000];
+
 export default function SalaryCalculatorClient() {
   const [salary, setSalary] = useState("60,000.00");
   const [monthly, setMonthly] = useState<number | null>(null);
@@ -154,6 +156,28 @@ export default function SalaryCalculatorClient() {
                 Calculate
               </button>
             </form>
+
+            <div className="mx-auto mt-6 w-full max-w-md">
+              <p className="mb-3 text-xs uppercase tracking-[0.18em] text-[#8b826f]">
+                Quick Salary Examples
+              </p>
+
+              <div className="grid grid-cols-2 gap-3">
+                {quickExamples.map((amount) => (
+                  <Link
+                    key={amount}
+                    href={`/salary/${amount}`}
+                    className="border border-[#2f2a22] bg-[#141414] px-4 py-3 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]"
+                  >
+                    ${amount.toLocaleString()}
+                  </Link>
+                ))}
+              </div>
+
+              <p className="mt-4 text-center text-sm leading-6 text-[#9f9486]">
+                Based on 12 months, 26 biweekly pay periods, and 52 weeks per year.
+              </p>
+            </div>
           </section>
 
           <section className="border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.24)]">
