@@ -1,65 +1,63 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="min-h-screen flex flex-col justify-between bg-[#111111] text-[#f5f1e8] px-6 py-12">
+      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-center">
+        <div className="w-full max-w-3xl rounded-[28px] border border-[#2a2a2a] bg-[#171717] px-8 py-16 text-center shadow-[0_20px_80px_rgba(0,0,0,0.45)]">
+          <p className="mb-4 text-sm uppercase tracking-[0.35em] text-[#a89a7a]">
+            Financial Tools
           </p>
+
+          <h1 className="mb-4 text-5xl font-bold tracking-tight text-[#f5f1e8]">
+            CalcTrio
+          </h1>
+
+          <p className="mx-auto mb-10 max-w-2xl text-lg text-[#c8c2b5]">
+            Simple financial calculators for real decisions.
+          </p>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            <a
+              href="/salary"
+              className="rounded-2xl border border-[#2f2a22] bg-[#1f1b16] px-6 py-4 font-medium text-[#f5f1e8] transition hover:border-[#a89a7a] hover:bg-[#262119]"
+            >
+              Salary Calculator
+            </a>
+
+            <a
+              href="/payment"
+              className="rounded-2xl border border-[#2f2a22] bg-[#1f1b16] px-6 py-4 font-medium text-[#f5f1e8] transition hover:border-[#a89a7a] hover:bg-[#262119]"
+            >
+              Payment Calculator
+            </a>
+
+            <a
+              href="/savings"
+              className="rounded-2xl border border-[#2f2a22] bg-[#1f1b16] px-6 py-4 font-medium text-[#f5f1e8] transition hover:border-[#a89a7a] hover:bg-[#262119]"
+            >
+              Savings Calculator
+            </a>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
+      </div>
+
+      <footer className="mt-12 text-center text-sm text-[#9f9788]">
+        <div className="mb-2 flex justify-center gap-6">
+          <a href="/about" className="hover:text-[#f5f1e8]">
+            About
           </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
+          <a href="/methodology" className="hover:text-[#f5f1e8]">
+            Methodology
+          </a>
+          <a href="/disclaimer" className="hover:text-[#f5f1e8]">
+            Disclaimer
+          </a>
+          <a href="/privacy" className="hover:text-[#f5f1e8]">
+            Privacy
           </a>
         </div>
-      </main>
-    </div>
+
+        <p>© {new Date().getFullYear()} CalcTrio</p>
+      </footer>
+    </main>
   );
 }
