@@ -13,16 +13,42 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  // 1. Set the base URL for all relative metadata links
+  metadataBase: new URL("https://calctrio.com"),
+
   title: {
     default: "CalcTrio | Free Online Financial & Salary Calculators",
     template: "%s | CalcTrio",
   },
   description: "Accurate and easy-to-use financial tools, including salary, savings, and payment calculators to help you manage your money.",
-  keywords: ["salary calculator", "savings tool", "financial planning", "CalcTrio"],
+  keywords: ["salary calculator", "savings tool", "financial planning", "tax calculator", "CalcTrio"],
   authors: [{ name: "CalcTrio Team" }],
   creator: "CalcTrio",
-};
 
+  // 2. Canonical URL (Prevents duplicate content issues)
+  alternates: {
+    canonical: "/",
+  },
+
+  // 3. Social Media Optimization (OpenGraph)
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://calctrio.com",
+    siteName: "CalcTrio",
+    title: "CalcTrio | Free Online Financial & Salary Calculators",
+    description: "Plan your finances with our accurate, free calculators.",
+    images:,
+  },
+
+  // 4. Twitter/X Card Optimization
+  twitter: {
+    card: "summary_large_image",
+    title: "CalcTrio | Financial Calculators",
+    description: "Simple tools for complex financial decisions.",
+    images:,
+  },
+};
 
 export default function RootLayout({
   children,
