@@ -19,6 +19,23 @@ for (let i = 210000; i <= 300000; i += 10000) {
   salaryExamples.push(i);
 }
 
+const paymentExamples: number[] = [];
+
+// 5k → 50k (every 2.5k)
+for (let i = 5000; i <= 50000; i += 2500) {
+  paymentExamples.push(i);
+}
+
+// 55k → 100k (every 5k)
+for (let i = 55000; i <= 100000; i += 5000) {
+  paymentExamples.push(i);
+}
+
+// 110k → 250k (every 10k)
+for (let i = 110000; i <= 250000; i += 10000) {
+  paymentExamples.push(i);
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -37,7 +54,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/payment`,
       lastModified: new Date(),
       changeFrequency: "weekly",
-      priority: 0.9,
+      priority: 0.95,
     },
     {
       url: `${baseUrl}/savings`,
@@ -78,5 +95,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticRoutes, ...salaryRoutes];
+  const paymentRoutes: MetadataRoute.Sitemap = paymentExamples.map((amount) => ({
+    url: `${baseUrl}/payment/${amount}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: 0.8,
+  }));
+
+  return [...staticRoutes, ...salaryRoutes, ...paymentRoutes];
 }
