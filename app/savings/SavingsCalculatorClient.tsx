@@ -71,6 +71,8 @@ function calculateMonthsToGoal(
   return months;
 }
 
+const quickExamples = [5000, 10000, 15000, 25000, 50000, 100000];
+
 export default function SavingsCalculatorClient() {
   const [goal, setGoal] = useState("10,000.00");
   const [years, setYears] = useState("3");
@@ -253,6 +255,28 @@ export default function SavingsCalculatorClient() {
                 Calculate
               </button>
             </form>
+
+            <div className="mx-auto mt-6 w-full max-w-md">
+              <p className="mb-3 text-xs uppercase tracking-[0.18em] text-[#8b826f]">
+                Quick Savings Examples
+              </p>
+
+              <div className="grid grid-cols-2 gap-3">
+                {quickExamples.map((amount) => (
+                  <Link
+                    key={amount}
+                    href={`/savings/${amount}`}
+                    className="border border-[#2f2a22] bg-[#141414] px-4 py-3 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]"
+                  >
+                    ${amount.toLocaleString()}
+                  </Link>
+                ))}
+              </div>
+
+              <p className="mt-4 text-center text-sm leading-6 text-[#9f9486]">
+                Example savings pages use a 3-year timeline and 4% annual return.
+              </p>
+            </div>
           </section>
 
           <section className="border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.24)]">
