@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "CalcTrio | Financial Calculators",
     description: "Simple tools for complex financial decisions.",
-    images:
+    images:,
   },
 };
 
