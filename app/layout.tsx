@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  // 1. Set the base URL for all relative metadata links
+  // 1. Base URL for all metadata
   metadataBase: new URL("https://calctrio.com"),
 
   title: {
@@ -25,12 +25,12 @@ export const metadata: Metadata = {
   authors: [{ name: "CalcTrio Team" }],
   creator: "CalcTrio",
 
-  // 2. Canonical URL (Prevents duplicate content issues)
+  // 2. Canonical URL
   alternates: {
     canonical: "/",
   },
 
-  // 3. Social Media Optimization (OpenGraph)
+  // 3. Social Media (OpenGraph)
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     images:,
   },
 
-  // 4. Twitter/X Card Optimization
+  // 4. Twitter Card
   twitter: {
     card: "summary_large_image",
     title: "CalcTrio | Financial Calculators",
@@ -60,7 +60,9 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+      </body>
     </html>
   );
 }
