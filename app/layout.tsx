@@ -13,9 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  // 1. Base URL for all metadata
   metadataBase: new URL("https://calctrio.com"),
-
   title: {
     default: "CalcTrio | Free Online Financial & Salary Calculators",
     template: "%s | CalcTrio",
@@ -24,13 +22,9 @@ export const metadata: Metadata = {
   keywords: ["salary calculator", "savings tool", "financial planning", "tax calculator", "CalcTrio"],
   authors: [{ name: "CalcTrio Team" }],
   creator: "CalcTrio",
-
-  // 2. Canonical URL
   alternates: {
     canonical: "/",
   },
-
-  // 3. Social Media (OpenGraph)
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -40,8 +34,6 @@ export const metadata: Metadata = {
     description: "Plan your finances with our accurate, free calculators.",
     images:,
   },
-
-  // 4. Twitter Card
   twitter: {
     card: "summary_large_image",
     title: "CalcTrio | Financial Calculators",
