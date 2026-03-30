@@ -2,10 +2,22 @@ import type { MetadataRoute } from "next";
 
 const baseUrl = "https://www.calctrio.com";
 
-const salaryExamples = [
-  30000, 35000, 40000, 45000, 50000, 55000, 60000, 65000, 70000, 75000,
-  80000, 85000, 90000, 100000, 110000, 120000, 130000, 150000, 175000, 200000,
-];
+const salaryExamples: number[] = [];
+
+// 25k → 100k (every 2.5k)
+for (let i = 25000; i <= 100000; i += 2500) {
+  salaryExamples.push(i);
+}
+
+// 100k → 200k (every 5k)
+for (let i = 105000; i <= 200000; i += 5000) {
+  salaryExamples.push(i);
+}
+
+// 200k → 300k (every 10k)
+for (let i = 210000; i <= 300000; i += 10000) {
+  salaryExamples.push(i);
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
