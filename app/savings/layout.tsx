@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Savings Calculator | CalcTrio",
+  title: "Savings Calculator",
   description: "See how your monthly savings grow over time.",
 };
 

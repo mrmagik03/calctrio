@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import PaymentCalculatorClient from "./PaymentCalculatorClient";
 
-const siteUrl = "https://calctrio.co";
+const siteUrl = "https://calctrio.com";
 const pageUrl = `${siteUrl}/payment`;
 
 const faqSchema = {
@@ -43,29 +43,29 @@ const webAppSchema = {
   applicationCategory: "FinanceApplication",
   operatingSystem: "Any",
   description:
-    "Calculate monthly payment, total paid, and total interest for a loan or mortgage with a clean payment calculator.",
+    "Use CalcTrio's payment calculator to estimate monthly loan payments, total paid, and total interest.",
 };
 
 export const metadata: Metadata = {
-  title: "Payment Calculator | Monthly Loan Payment, Total Paid & Interest",
+  title: "Payment Calculator: Monthly Loan Payment, Total Paid & Interest",
   description:
-    "Calculate your monthly payment, total paid, and total interest with CalcTrio's clean loan and mortgage payment calculator.",
+    "Use CalcTrio's payment calculator to estimate monthly loan payments, total paid, and total interest for loans and mortgages.",
   alternates: {
     canonical: "/payment",
   },
   openGraph: {
-    title: "Payment Calculator | Monthly Loan Payment, Total Paid & Interest",
+    title: "Payment Calculator: Monthly Loan Payment, Total Paid & Interest",
     description:
-      "Calculate your monthly payment, total paid, and total interest with CalcTrio's clean loan and mortgage payment calculator.",
+      "Use CalcTrio's payment calculator to estimate monthly loan payments, total paid, and total interest for loans and mortgages.",
     url: pageUrl,
     siteName: "CalcTrio",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "Payment Calculator | Monthly Loan Payment, Total Paid & Interest",
+    title: "Payment Calculator: Monthly Loan Payment, Total Paid & Interest",
     description:
-      "Calculate your monthly payment, total paid, and total interest with CalcTrio's clean loan and mortgage payment calculator.",
+      "Use CalcTrio's payment calculator to estimate monthly loan payments, total paid, and total interest for loans and mortgages.",
   },
 };
 

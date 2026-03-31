@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Payment Calculator | CalcTrio",
+  title: "Payment Calculator",
   description: "Estimate your monthly loan or mortgage payment.",
 };
 

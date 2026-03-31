@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import SalaryCalculatorClient from "./SalaryCalculatorClient";
 
-const siteUrl = "https://calctrio.co";
+const siteUrl = "https://calctrio.com";
 const pageUrl = `${siteUrl}/salary`;
 
 const faqSchema = {
@@ -43,29 +43,29 @@ const webAppSchema = {
   applicationCategory: "FinanceApplication",
   operatingSystem: "Any",
   description:
-    "Convert annual salary into monthly, biweekly, weekly, hourly, and daily pay with CalcTrio's clean salary calculator.",
+    "Convert annual salary into monthly, biweekly, weekly, hourly, and daily pay with CalcTrio's salary calculator.",
 };
 
 export const metadata: Metadata = {
-  title: "Salary Calculator | Monthly, Biweekly, Weekly & Hourly Pay",
+  title: "Salary Calculator: Monthly, Biweekly, Weekly & Hourly Pay",
   description:
-    "Convert annual salary into monthly, biweekly, weekly, and hourly pay with CalcTrio's clean salary calculator.",
+    "Convert annual salary into monthly, biweekly, weekly, hourly, and daily pay with CalcTrio's salary calculator.",
   alternates: {
     canonical: "/salary",
   },
   openGraph: {
-    title: "Salary Calculator | Monthly, Biweekly, Weekly & Hourly Pay",
+    title: "Salary Calculator: Monthly, Biweekly, Weekly & Hourly Pay",
     description:
-      "Convert annual salary into monthly, biweekly, weekly, and hourly pay with CalcTrio's clean salary calculator.",
+      "Convert annual salary into monthly, biweekly, weekly, hourly, and daily pay with CalcTrio's salary calculator.",
     url: pageUrl,
     siteName: "CalcTrio",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "Salary Calculator | Monthly, Biweekly, Weekly & Hourly Pay",
+    title: "Salary Calculator: Monthly, Biweekly, Weekly & Hourly Pay",
     description:
-      "Convert annual salary into monthly, biweekly, weekly, and hourly pay with CalcTrio's clean salary calculator.",
+      "Convert annual salary into monthly, biweekly, weekly, hourly, and daily pay with CalcTrio's salary calculator.",
   },
 };
 

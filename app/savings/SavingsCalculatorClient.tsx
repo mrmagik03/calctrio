@@ -186,6 +186,12 @@ export default function SavingsCalculatorClient() {
             >
               Payment
             </Link>
+            <Link
+              href="/savings"
+              className="transition-colors duration-200 hover:text-[#f7f3eb]"
+            >
+              Savings
+            </Link>
           </nav>
         </div>
       </header>
@@ -258,7 +264,7 @@ export default function SavingsCalculatorClient() {
 
             <div className="mx-auto mt-6 w-full max-w-md">
               <p className="mb-3 text-xs uppercase tracking-[0.18em] text-[#8b826f]">
-                Quick Savings Examples
+                Quick Savings Goals
               </p>
 
               <div className="grid grid-cols-2 gap-3">
@@ -274,7 +280,7 @@ export default function SavingsCalculatorClient() {
               </div>
 
               <p className="mt-4 text-center text-sm leading-6 text-[#9f9486]">
-                Example savings pages use a 3-year timeline and 4% annual return.
+                Use example goal pages for a fast starting point, then adjust the years or return estimate.
               </p>
             </div>
           </section>
@@ -303,7 +309,7 @@ export default function SavingsCalculatorClient() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
                     <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">
-                      Total Contributed
+                      Total Contribution
                     </p>
                     <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">
                       {formatCurrency(totalContribution)}
@@ -325,13 +331,9 @@ export default function SavingsCalculatorClient() {
                     Smart Insight
                   </p>
                   <p className="text-sm leading-6 text-[#d2c7b2]">
-                    That is about{" "}
-                    <span className="font-semibold text-[#f7f3eb]">
-                      {formatCurrency(weeklyNeeded)}/week
-                    </span>
-                    . Adding{" "}
+                    Saving{" "}
                     <span className="font-semibold text-[#f7f3eb]">+$100/month</span>{" "}
-                    could get you there about{" "}
+                    could help you reach your goal{" "}
                     <span className="font-semibold text-[#f7f3eb]">
                       {monthsSooner} months sooner
                     </span>
@@ -343,21 +345,19 @@ export default function SavingsCalculatorClient() {
                   <div className="flex items-center justify-between py-2">
                     <span>Savings goal</span>
                     <span className="font-medium text-[#f7f3eb]">
-                      {formatCurrency(parseNumber(goal))}
+                      {formatCurrency(goalAmount)}
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between border-t border-[#232323] py-2">
                     <span>Years to save</span>
-                    <span className="font-medium text-[#f7f3eb]">
-                      {years} years
-                    </span>
+                    <span className="font-medium text-[#f7f3eb]">{years} years</span>
                   </div>
 
                   <div className="flex items-center justify-between border-t border-[#232323] py-2">
                     <span>Annual return</span>
                     <span className="font-medium text-[#f7f3eb]">
-                      {parseNumber(rate).toFixed(2)}%
+                      {annualRate.toFixed(2)}%
                     </span>
                   </div>
 
@@ -371,7 +371,7 @@ export default function SavingsCalculatorClient() {
               </div>
             ) : (
               <div className="flex min-h-[360px] items-center justify-center border border-dashed border-[#2c2925] bg-[#141414] px-6 text-center text-[#9f9486]">
-                Click calculate to see your monthly savings target and breakdown.
+                Click calculate to see your monthly savings target, contributions, and interest earned.
               </div>
             )}
           </section>

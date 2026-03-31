@@ -132,10 +132,14 @@ export default function PaymentCalculatorClient() {
     setTotalInterest(null);
   };
 
-  const calculate = () => {
-    const principal = parseNumber(loan);
-    const annualRate = parseNumber(rate);
-    const termYears = Number(years);
+  const calculate = (
+    loanValue = loan,
+    rateValue = rate,
+    yearsValue = years
+  ) => {
+    const principal = parseNumber(loanValue);
+    const annualRate = parseNumber(rateValue);
+    const termYears = Number(yearsValue);
     const months = termYears * 12;
 
     if (principal <= 0 || termYears <= 0 || months <= 0) {
@@ -186,6 +190,17 @@ export default function PaymentCalculatorClient() {
     e.target.select();
   };
 
+  const applyExample = (amount: number) => {
+    const nextLoan = formatInputCurrency(amount.toString());
+    const nextRate = "6.50";
+    const nextYears = "5";
+
+    setLoan(nextLoan);
+    setRate(nextRate);
+    setYears(nextYears);
+    calculate(nextLoan, nextRate, nextYears);
+  };
+
   const hasResults =
     monthly !== null && totalPaid !== null && totalInterest !== null;
 
@@ -231,6 +246,12 @@ export default function PaymentCalculatorClient() {
               className="transition-colors duration-200 hover:text-[#f7f3eb]"
             >
               Salary
+            </Link>
+            <Link
+              href="/payment"
+              className="transition-colors duration-200 hover:text-[#f7f3eb]"
+            >
+              Payment
             </Link>
             <Link
               href="/savings"
@@ -315,19 +336,32 @@ export default function PaymentCalculatorClient() {
 
               <div className="grid grid-cols-2 gap-3">
                 {quickExamples.map((amount) => (
-                  <Link
+                  <button
                     key={amount}
-                    href={`/payment/${amount}`}
+                    type="button"
+                    onClick={() => applyExample(amount)}
                     className="border border-[#2f2a22] bg-[#141414] px-4 py-3 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]"
                   >
                     ${amount.toLocaleString()}
-                  </Link>
+                  </button>
                 ))}
               </div>
 
               <p className="mt-4 text-center text-sm leading-6 text-[#9f9486]">
-                Example payment pages use a 5-year loan at 6.5% APR.
+                Example presets use a 5-year loan at 6.5% APR.
               </p>
+
+              <div className="mt-3 flex flex-wrap justify-center gap-2 text-xs text-[#8b826f]">
+                {quickExamples.map((amount) => (
+                  <Link
+                    key={`detail-${amount}`}
+                    href={`/payment/${amount}`}
+                    className="transition-colors duration-200 hover:text-[#f7f3eb]"
+                  >
+                    View {amount.toLocaleString()} page
+                  </Link>
+                ))}
+              </div>
             </div>
           </section>
 

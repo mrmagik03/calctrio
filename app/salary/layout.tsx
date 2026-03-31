@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Salary Calculator | CalcTrio",
+  title: "Salary Calculator",
   description: "Convert your salary into monthly, weekly, and hourly pay.",
 };
 

@@ -75,8 +75,7 @@ export default function SalaryCalculatorClient() {
     e.target.select();
   };
 
-  const hasResults =
-    monthly !== null && biweekly !== null && weekly !== null;
+  const hasResults = monthly !== null && biweekly !== null && weekly !== null;
 
   const annualSalary = parseNumber(salary);
   const hourly = annualSalary > 0 ? annualSalary / 2080 : 0;
@@ -99,6 +98,12 @@ export default function SalaryCalculatorClient() {
               className="transition-colors duration-200 hover:text-[#f7f3eb]"
             >
               Home
+            </Link>
+            <Link
+              href="/salary"
+              className="transition-colors duration-200 hover:text-[#f7f3eb]"
+            >
+              Salary
             </Link>
             <Link
               href="/payment"
@@ -261,9 +266,9 @@ export default function SalaryCalculatorClient() {
                   </div>
 
                   <div className="flex items-center justify-between border-t border-[#232323] py-2">
-                    <span>Estimated hourly rate</span>
+                    <span>Weekly pay</span>
                     <span className="font-medium text-[#f7f3eb]">
-                      {formatCurrency(hourly)}
+                      {formatCurrency(weekly)}
                     </span>
                   </div>
                 </div>
@@ -292,7 +297,7 @@ export default function SalaryCalculatorClient() {
                 How is monthly salary calculated?
               </h3>
               <p className="text-sm leading-6 text-[#d2c7b2]">
-                This calculator divides your annual salary by 12 to estimate monthly pay before taxes and deductions.
+                This calculator divides annual salary by 12 to estimate gross monthly pay before taxes and deductions.
               </p>
             </div>
 
@@ -301,7 +306,7 @@ export default function SalaryCalculatorClient() {
                 What does biweekly pay mean?
               </h3>
               <p className="text-sm leading-6 text-[#d2c7b2]">
-                Biweekly pay assumes 26 pay periods per year, which is common for many full-time jobs in the United States.
+                Biweekly pay assumes 26 pay periods in a year, which is common for many full-time jobs.
               </p>
             </div>
 
@@ -310,7 +315,7 @@ export default function SalaryCalculatorClient() {
                 Is this before or after taxes?
               </h3>
               <p className="text-sm leading-6 text-[#d2c7b2]">
-                These results are gross pay estimates. Federal, state, local, and benefit deductions are not included.
+                These are gross pay estimates only. Taxes, benefits, and other payroll deductions are not included.
               </p>
             </div>
           </div>
@@ -335,7 +340,7 @@ export default function SalaryCalculatorClient() {
                 Payment Calculator
               </p>
               <p className="mt-1 text-sm text-[#d2c7b2]">
-                Estimate monthly loan payments, total paid, and total interest.
+                Estimate monthly payments and compare total loan costs.
               </p>
             </Link>
 
@@ -347,7 +352,7 @@ export default function SalaryCalculatorClient() {
                 Savings Calculator
               </p>
               <p className="mt-1 text-sm text-[#d2c7b2]">
-                Figure out what you need to save monthly to reach a goal.
+                Estimate how much you need to save each month to hit a goal.
               </p>
             </Link>
           </div>

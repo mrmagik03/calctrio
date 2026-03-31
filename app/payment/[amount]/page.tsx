@@ -1,504 +1,325 @@
-"use client";
-
+import type { Metadata } from "next";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { notFound } from "next/navigation";
 
-function formatCurrency(num: number) {
+const siteUrl = "https://calctrio.com";
+const defaultRate = 6.5;
+const defaultYears = 5;
+
+const paymentExamples: number[] = [];
+for (let i = 5000; i <= 50000; i += 2500) paymentExamples.push(i);
+for (let i = 55000; i <= 100000; i += 5000) paymentExamples.push(i);
+for (let i = 110000; i <= 250000; i += 10000) paymentExamples.push(i);
+
+function isValidAmount(value: string) {
+  return /^\d+$/.test(value);
+}
+
+function formatCurrency(num: number, decimals = 2) {
   return num.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
   });
 }
 
-function sanitizeCurrencyInput(value: string) {
-  return value.replace(/[^0-9.]/g, "");
+function formatWholeCurrency(num: number) {
+  return formatCurrency(num, 0);
 }
 
-function sanitizeWholeNumberInput(value: string) {
-  return value.replace(/[^0-9]/g, "");
-}
+function getPaymentData(amountParam: string) {
+  if (!isValidAmount(amountParam)) return null;
 
-function parseNumber(value: string) {
-  const cleaned = sanitizeCurrencyInput(value);
-  if (!cleaned) return 0;
-
-  const parsed = Number(cleaned);
-  return Number.isFinite(parsed) ? parsed : 0;
-}
-
-function formatInputCurrency(value: string) {
-  const num = parseNumber(value);
-
-  if (!num) return "";
-
-  return num.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-}
-
-function formatRateInput(value: string) {
-  const num = parseNumber(value);
-  return num.toFixed(2);
-}
-
-type ExtraPaymentResult = {
-  months: number;
-  totalPaid: number;
-  valid: boolean;
-};
-
-function calculateMonthsWithExtraPayment(
-  principal: number,
-  annualRate: number,
-  monthlyPayment: number,
-  extraPayment: number
-): ExtraPaymentResult {
-  const paymentPerMonth = monthlyPayment + extraPayment;
-
-  if (principal <= 0 || paymentPerMonth <= 0) {
-    return {
-      months: 0,
-      totalPaid: 0,
-      valid: false,
-    };
+  const principal = Number(amountParam);
+  if (!Number.isFinite(principal) || principal < 1000 || principal > 10000000) {
+    return null;
   }
 
-  if (annualRate === 0) {
-    const months = Math.ceil(principal / paymentPerMonth);
-    return {
-      months,
-      totalPaid: paymentPerMonth * months,
-      valid: true,
-    };
-  }
-
-  const monthlyRate = annualRate / 100 / 12;
-  let balance = principal;
-  let months = 0;
-  let totalPaid = 0;
-  const maxMonths = 1200;
-
-  while (balance > 0.01 && months < maxMonths) {
-    const interest = balance * monthlyRate;
-    const principalPaid = paymentPerMonth - interest;
-
-    if (principalPaid <= 0) {
-      return {
-        months: 0,
-        totalPaid: 0,
-        valid: false,
-      };
-    }
-
-    const actualPayment =
-      balance + interest < paymentPerMonth ? balance + interest : paymentPerMonth;
-
-    balance = Math.max(0, balance + interest - paymentPerMonth);
-    totalPaid += actualPayment;
-    months += 1;
-  }
-
-  if (months >= maxMonths) {
-    return {
-      months: 0,
-      totalPaid: 0,
-      valid: false,
-    };
-  }
+  const months = defaultYears * 12;
+  const monthlyRate = defaultRate / 100 / 12;
+  const monthlyPayment =
+    (principal * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months));
+  const totalPaid = monthlyPayment * months;
+  const totalInterest = totalPaid - principal;
 
   return {
+    principal,
     months,
+    monthlyPayment,
     totalPaid,
-    valid: true,
+    totalInterest,
   };
 }
 
-const quickExamples = [10000, 15000, 20000, 30000, 50000, 75000];
+function getNearbyPaymentLinks(currentAmount: number) {
+  const currentIndex = paymentExamples.indexOf(currentAmount);
 
-export default function PaymentCalculatorClient() {
-  const [loan, setLoan] = useState("25,000.00");
-  const [rate, setRate] = useState("6.50");
-  const [years, setYears] = useState("5");
-  const [monthly, setMonthly] = useState<number | null>(null);
-  const [totalPaid, setTotalPaid] = useState<number | null>(null);
-  const [totalInterest, setTotalInterest] = useState<number | null>(null);
+  if (currentIndex === -1) {
+    return paymentExamples.slice(0, 4);
+  }
 
-  const clearResults = () => {
-    setMonthly(null);
-    setTotalPaid(null);
-    setTotalInterest(null);
+  const start = Math.max(0, currentIndex - 2);
+  const end = Math.min(paymentExamples.length, currentIndex + 3);
+  return paymentExamples.slice(start, end).filter((amount) => amount !== currentAmount);
+}
+
+export function generateStaticParams() {
+  return paymentExamples.map((amount) => ({ amount: amount.toString() }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ amount: string }>;
+}): Promise<Metadata> {
+  const { amount } = await params;
+  const paymentData = getPaymentData(amount);
+
+  if (!paymentData) {
+    return {
+      title: "Payment Calculator",
+      description:
+        "Use CalcTrio's payment calculator to estimate monthly loan payments, total paid, and total interest.",
+      alternates: {
+        canonical: "/payment",
+      },
+    };
+  }
+
+  const principalText = formatWholeCurrency(paymentData.principal);
+  const monthlyText = formatCurrency(paymentData.monthlyPayment);
+  const totalInterestText = formatCurrency(paymentData.totalInterest);
+  const pageUrl = `${siteUrl}/payment/${amount}`;
+  const title = `${principalText} Loan Payment Calculator`;
+  const description = `${principalText} financed over ${defaultYears} years at ${defaultRate}% APR is about ${monthlyText} per month with roughly ${totalInterestText} in total interest.`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `/payment/${amount}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: pageUrl,
+      siteName: "CalcTrio",
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
+  };
+}
+
+export default async function PaymentAmountPage({
+  params,
+}: {
+  params: Promise<{ amount: string }>;
+}) {
+  const { amount } = await params;
+  const paymentData = getPaymentData(amount);
+
+  if (!paymentData) {
+    notFound();
+  }
+
+  const principalText = formatWholeCurrency(paymentData.principal);
+  const monthlyText = formatCurrency(paymentData.monthlyPayment);
+  const totalPaidText = formatCurrency(paymentData.totalPaid);
+  const totalInterestText = formatCurrency(paymentData.totalInterest);
+  const pageUrl = `${siteUrl}/payment/${amount}`;
+  const nearbyExamples = getNearbyPaymentLinks(paymentData.principal);
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: `What is the monthly payment on ${principalText}?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `${principalText} financed over ${defaultYears} years at ${defaultRate}% APR is about ${monthlyText} per month.`,
+        },
+      },
+      {
+        "@type": "Question",
+        name: `How much interest would I pay on ${principalText}?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `At ${defaultRate}% APR over ${defaultYears} years, total interest would be about ${totalInterestText}.`,
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Does this include taxes or insurance?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "No. This example includes principal and interest only. Taxes, insurance, HOA fees, and other costs are not included.",
+        },
+      },
+    ],
   };
 
-  const calculate = () => {
-    const principal = parseNumber(loan);
-    const annualRate = parseNumber(rate);
-    const termYears = Number(years);
-    const months = termYears * 12;
-
-    if (principal <= 0 || termYears <= 0 || months <= 0) {
-      clearResults();
-      return;
-    }
-
-    if (annualRate === 0) {
-      const payment = principal / months;
-      const paid = payment * months;
-      const interest = paid - principal;
-
-      setMonthly(payment);
-      setTotalPaid(paid);
-      setTotalInterest(interest);
-      return;
-    }
-
-    const monthlyRate = annualRate / 100 / 12;
-
-    const payment =
-      (principal * monthlyRate) /
-      (1 - Math.pow(1 + monthlyRate, -months));
-
-    if (!Number.isFinite(payment)) {
-      clearResults();
-      return;
-    }
-
-    const paid = payment * months;
-    const interest = paid - principal;
-
-    setMonthly(payment);
-    setTotalPaid(paid);
-    setTotalInterest(interest);
+  const webAppSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: `CalcTrio ${principalText} Payment Calculator`,
+    url: pageUrl,
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "Any",
+    description: `${principalText} financed over ${defaultYears} years at ${defaultRate}% APR is about ${monthlyText} per month with CalcTrio's payment calculator.`,
   };
 
-  useEffect(() => {
-    calculate();
-  }, []);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    calculate();
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Payment Calculator", item: `${siteUrl}/payment` },
+      { "@type": "ListItem", position: 3, name: principalText, item: pageUrl },
+    ],
   };
-
-  const handleSelectAll = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.select();
-  };
-
-  const hasResults =
-    monthly !== null && totalPaid !== null && totalInterest !== null;
-
-  const principal = parseNumber(loan);
-  const annualRate = parseNumber(rate);
-  const fullTermMonths = Number(years) * 12;
-
-  const extraPaymentResult =
-    hasResults && monthly !== null
-      ? calculateMonthsWithExtraPayment(principal, annualRate, monthly, 100)
-      : { months: 0, totalPaid: 0, valid: false };
-
-  const monthsSaved =
-    extraPaymentResult.valid && fullTermMonths > 0
-      ? Math.max(0, fullTermMonths - extraPaymentResult.months)
-      : 0;
-
-  const extraInterestSaved =
-    extraPaymentResult.valid && totalPaid !== null
-      ? Math.max(0, totalPaid - extraPaymentResult.totalPaid)
-      : 0;
 
   return (
-    <main className="min-h-screen bg-[#111111] text-[#f7f3eb]">
-      <header className="border-b border-[#201c18] bg-[#0f0f0f]/95">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5">
-          <Link
-            href="/"
-            className="text-lg font-semibold tracking-[0.01em] text-[#f7f3eb] transition-colors duration-200 hover:text-[#d8b07a]"
-          >
-            CalcTrio
-          </Link>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
 
-          <nav className="flex items-center gap-5 text-sm text-[#b29f7a]">
+      <main className="min-h-screen bg-[#111111] text-[#f7f3eb]">
+        <header className="border-b border-[#201c18] bg-[#0f0f0f]/95">
+          <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5">
             <Link
               href="/"
-              className="transition-colors duration-200 hover:text-[#f7f3eb]"
+              className="text-lg font-semibold tracking-[0.01em] text-[#f7f3eb] transition-colors duration-200 hover:text-[#d8b07a]"
             >
-              Home
+              CalcTrio
             </Link>
-            <Link
-              href="/salary"
-              className="transition-colors duration-200 hover:text-[#f7f3eb]"
-            >
-              Salary
-            </Link>
-            <Link
-              href="/savings"
-              className="transition-colors duration-200 hover:text-[#f7f3eb]"
-            >
-              Savings
-            </Link>
-          </nav>
-        </div>
-      </header>
 
-      <div className="mx-auto w-full max-w-6xl px-6 py-8">
-        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)]">
-          <section className="border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.28)]">
-            <h1 className="mb-3 text-center text-4xl font-bold">
-              Payment Calculator
-            </h1>
+            <nav className="flex items-center gap-5 text-sm text-[#b29f7a]">
+              <Link href="/" className="transition-colors duration-200 hover:text-[#f7f3eb]">Home</Link>
+              <Link href="/salary" className="transition-colors duration-200 hover:text-[#f7f3eb]">Salary</Link>
+              <Link href="/payment" className="transition-colors duration-200 hover:text-[#f7f3eb]">Payment</Link>
+              <Link href="/savings" className="transition-colors duration-200 hover:text-[#f7f3eb]">Savings</Link>
+            </nav>
+          </div>
+        </header>
 
-            <p className="mb-8 text-center text-lg text-[#d2c7b2]">
-              Estimate your monthly loan or mortgage payment.
+        <div className="mx-auto w-full max-w-6xl px-6 py-8">
+          <div className="mb-6">
+            <Link
+              href="/payment"
+              className="inline-flex items-center border border-[#2f2a22] bg-[#1f1b16] px-4 py-2 text-sm font-medium text-[#f7f3eb] transition-colors duration-200 hover:border-[#b29f7a] hover:bg-[#262119]"
+            >
+              ← Back to Payment Calculator
+            </Link>
+          </div>
+
+          <section className="rounded-xl border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.28)]">
+            <p className="mb-3 text-xs uppercase tracking-[0.22em] text-[#8b826f]">
+              Loan Example
             </p>
 
-            <form
-              onSubmit={handleSubmit}
-              className="mx-auto flex w-full max-w-md flex-col"
-            >
-              <label className="mb-2 text-sm font-medium text-[#b29f7a]">
-                Loan Amount
-              </label>
+            <h1 className="max-w-4xl text-4xl font-bold leading-tight text-[#f7f3eb] md:text-5xl">
+              {principalText} Loan Payment Calculator
+            </h1>
 
-              <div className="relative mb-4">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8b826f]">
-                  $
-                </span>
-                <input
-                  inputMode="decimal"
-                  value={loan}
-                  onChange={(e) => setLoan(sanitizeCurrencyInput(e.target.value))}
-                  onBlur={() => setLoan(formatInputCurrency(loan))}
-                  onFocus={handleSelectAll}
-                  className="w-full border border-[#2f2a22] bg-[#1b1b1b] py-3 pl-8 pr-4 text-center transition-all duration-200 focus:border-[#b29f7a] focus:outline-none focus:shadow-[0_0_0_3px_rgba(178,159,122,0.12)]"
-                />
+            <p className="mt-5 max-w-3xl text-lg leading-8 text-[#d2c7b2]">
+              Financing <span className="font-semibold text-[#f7f3eb]">{principalText}</span> over{" "}
+              <span className="font-semibold text-[#f7f3eb]">{defaultYears} years</span> at{" "}
+              <span className="font-semibold text-[#f7f3eb]">{defaultRate}% APR</span> gives an
+              estimated monthly payment of{" "}
+              <span className="font-semibold text-[#f7f3eb]">{monthlyText}</span>.
+            </p>
+          </section>
+
+          <section className="mt-6 grid gap-6 md:grid-cols-3">
+            <div className="rounded-xl border border-[#2a2a2a] bg-[#171717] px-7 py-7 shadow-[0_12px_32px_rgba(0,0,0,0.18)]">
+              <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Loan Amount</p>
+              <p className="text-4xl font-semibold tracking-tight text-[#f7f3eb]">{principalText}</p>
+            </div>
+
+            <div className="rounded-xl border border-[#2a2a2a] bg-[#171717] px-7 py-7 shadow-[0_12px_32px_rgba(0,0,0,0.18)]">
+              <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Monthly Payment</p>
+              <p className="text-4xl font-semibold tracking-tight text-[#f7f3eb]">{monthlyText}</p>
+            </div>
+
+            <div className="rounded-xl border border-[#2a2a2a] bg-[#171717] px-7 py-7 shadow-[0_12px_32px_rgba(0,0,0,0.18)]">
+              <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Total Interest</p>
+              <p className="text-4xl font-semibold tracking-tight text-[#f7f3eb]">{totalInterestText}</p>
+            </div>
+          </section>
+
+          <section className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+            <div className="rounded-xl border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.18)]">
+              <div className="mb-6">
+                <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">Clean Breakdown</p>
+                <h2 className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">Full payment picture</h2>
               </div>
 
-              <label className="mb-2 text-sm font-medium text-[#b29f7a]">
-                Interest Rate (%)
-              </label>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
+                  <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Total Paid</p>
+                  <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">{totalPaidText}</p>
+                </div>
 
-              <input
-                inputMode="decimal"
-                value={rate}
-                onChange={(e) => setRate(sanitizeCurrencyInput(e.target.value))}
-                onBlur={() => setRate(formatRateInput(rate))}
-                onFocus={handleSelectAll}
-                className="mb-4 w-full border border-[#2f2a22] bg-[#1b1b1b] px-4 py-3 text-center transition-all duration-200 focus:border-[#b29f7a] focus:outline-none focus:shadow-[0_0_0_3px_rgba(178,159,122,0.12)]"
-              />
+                <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
+                  <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Loan Assumptions</p>
+                  <p className="text-sm leading-7 text-[#d2c7b2]">
+                    Fixed monthly payment, {defaultRate}% APR, and a {defaultYears}-year repayment term.
+                  </p>
+                </div>
+              </div>
 
-              <label className="mb-2 text-sm font-medium text-[#b29f7a]">
-                Loan Term (Years)
-              </label>
+              <div className="mt-4 border border-[#3a3128] bg-[#151311] px-5 py-4">
+                <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[#b29f7a]">Smart Insight</p>
+                <p className="text-sm leading-6 text-[#d2c7b2]">
+                  This example shows principal and interest only. Taxes, insurance, and other loan-related costs could raise the real monthly out-of-pocket amount.
+                </p>
+              </div>
+            </div>
 
-              <input
-                inputMode="numeric"
-                value={years}
-                onChange={(e) => setYears(sanitizeWholeNumberInput(e.target.value))}
-                onFocus={handleSelectAll}
-                className="mb-5 w-full border border-[#2f2a22] bg-[#1b1b1b] px-4 py-3 text-center transition-all duration-200 focus:border-[#b29f7a] focus:outline-none focus:shadow-[0_0_0_3px_rgba(178,159,122,0.12)]"
-              />
+            <aside className="rounded-xl border border-[#2a2a2a] bg-[#171717] px-7 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.18)]">
+              <p className="mb-3 text-xs uppercase tracking-[0.22em] text-[#8b826f]">Try Another Loan</p>
 
-              <button
-                type="submit"
-                className="border border-[#4a4034] bg-[#241f19] px-6 py-3 transition-all duration-200 hover:border-[#b29f7a] hover:bg-[#2d271f] active:scale-[0.99]"
-              >
-                Calculate
-              </button>
-            </form>
-
-            <div className="mx-auto mt-6 w-full max-w-md">
-              <p className="mb-3 text-xs uppercase tracking-[0.18em] text-[#8b826f]">
-                Quick Loan Examples
-              </p>
-
-              <div className="grid grid-cols-2 gap-3">
-                {quickExamples.map((amount) => (
+              <div className="grid gap-3">
+                {nearbyExamples.map((example) => (
                   <Link
-                    key={amount}
-                    href={`/payment/${amount}`}
-                    className="border border-[#2f2a22] bg-[#141414] px-4 py-3 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]"
+                    key={example}
+                    href={`/payment/${example}`}
+                    className="border border-[#2f2a22] bg-[#141414] px-4 py-3 text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]"
                   >
-                    ${amount.toLocaleString()}
+                    {formatWholeCurrency(example)} loan
                   </Link>
                 ))}
               </div>
 
-              <p className="mt-4 text-center text-sm leading-6 text-[#9f9486]">
-                Example payment pages use a 5-year loan at 6.5% APR.
-              </p>
-            </div>
-          </section>
-
-          <section className="border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.24)]">
-            <div className="mb-6">
-              <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">
-                Clean Breakdown
-              </p>
-              <h2 className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">
-                Full payment picture
-              </h2>
-            </div>
-
-            {hasResults ? (
-              <div className="space-y-4">
-                <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
-                  <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">
-                    Monthly Payment
-                  </p>
-                  <p className="text-4xl font-semibold tracking-tight text-[#f7f3eb]">
-                    {formatCurrency(monthly)}
-                  </p>
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
-                    <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">
-                      Total Paid
-                    </p>
-                    <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">
-                      {formatCurrency(totalPaid)}
-                    </p>
-                  </div>
-
-                  <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
-                    <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">
-                      Total Interest
-                    </p>
-                    <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">
-                      {formatCurrency(totalInterest)}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="border border-[#3a3128] bg-[#151311] px-5 py-4">
-                  <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[#b29f7a]">
-                    Smart Insight
-                  </p>
-                  <p className="text-sm leading-6 text-[#d2c7b2]">
-                    Paying{" "}
-                    <span className="font-semibold text-[#f7f3eb]">+$100/month</span>{" "}
-                    could pay this off{" "}
-                    <span className="font-semibold text-[#f7f3eb]">
-                      {monthsSaved} months sooner
-                    </span>{" "}
-                    and save about{" "}
-                    <span className="font-semibold text-[#f7f3eb]">
-                      {formatCurrency(extraInterestSaved)}
-                    </span>{" "}
-                    in interest.
-                  </p>
-                </div>
-
-                <div className="border border-[#2a2a2a] bg-[#121212] px-5 py-4 text-sm text-[#d2c7b2]">
-                  <div className="flex items-center justify-between py-2">
-                    <span>Loan amount</span>
-                    <span className="font-medium text-[#f7f3eb]">
-                      {formatCurrency(parseNumber(loan))}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between border-t border-[#232323] py-2">
-                    <span>Interest rate</span>
-                    <span className="font-medium text-[#f7f3eb]">
-                      {parseNumber(rate).toFixed(2)}%
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between border-t border-[#232323] py-2">
-                    <span>Loan term</span>
-                    <span className="font-medium text-[#f7f3eb]">
-                      {years} years
-                    </span>
-                  </div>
+              <div className="mt-6 border-t border-[#232323] pt-6">
+                <p className="mb-3 text-xs uppercase tracking-[0.22em] text-[#8b826f]">Related Calculators</p>
+                <div className="grid gap-3">
+                  <Link href="/payment" className="border border-[#2f2a22] bg-[#141414] px-4 py-3 text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]">Payment calculator</Link>
+                  <Link href="/salary" className="border border-[#2f2a22] bg-[#141414] px-4 py-3 text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]">Salary calculator</Link>
+                  <Link href="/savings" className="border border-[#2f2a22] bg-[#141414] px-4 py-3 text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]">Savings calculator</Link>
                 </div>
               </div>
-            ) : (
-              <div className="flex min-h-[360px] items-center justify-center border border-dashed border-[#2c2925] bg-[#141414] px-6 text-center text-[#9f9486]">
-                Click calculate to see your monthly payment, total paid, and total interest.
-              </div>
-            )}
+            </aside>
           </section>
         </div>
-
-        <section className="mt-6 border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.18)]">
-          <div className="mb-6">
-            <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">
-              FAQs
-            </p>
-            <h2 className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">
-              Payment calculator questions
-            </h2>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
-              <h3 className="mb-2 text-lg font-semibold text-[#f7f3eb]">
-                How is monthly payment calculated?
-              </h3>
-              <p className="text-sm leading-6 text-[#d2c7b2]">
-                This calculator uses your loan amount, interest rate, and term to estimate a fixed monthly payment over the full payoff period.
-              </p>
-            </div>
-
-            <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
-              <h3 className="mb-2 text-lg font-semibold text-[#f7f3eb]">
-                Does this include taxes or insurance?
-              </h3>
-              <p className="text-sm leading-6 text-[#d2c7b2]">
-                No. The result is principal and interest only. Property taxes, homeowners insurance, HOA fees, and similar costs are not included here.
-              </p>
-            </div>
-
-            <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
-              <h3 className="mb-2 text-lg font-semibold text-[#f7f3eb]">
-                Why does total paid exceed the loan amount?
-              </h3>
-              <p className="text-sm leading-6 text-[#d2c7b2]">
-                Because total paid includes both the original amount borrowed and the total interest charged over the life of the loan.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="mt-6 border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.18)]">
-          <div className="mb-5">
-            <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">
-              Related Calculators
-            </p>
-            <h2 className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">
-              Keep exploring
-            </h2>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Link
-              href="/salary"
-              className="border border-[#2f2a22] bg-[#141414] px-5 py-4 transition-colors duration-200 hover:border-[#b29f7a]"
-            >
-              <p className="text-lg font-semibold text-[#f7f3eb]">
-                Salary Calculator
-              </p>
-              <p className="mt-1 text-sm text-[#d2c7b2]">
-                Turn annual pay into monthly, biweekly, and weekly numbers.
-              </p>
-            </Link>
-
-            <Link
-              href="/savings"
-              className="border border-[#2f2a22] bg-[#141414] px-5 py-4 transition-colors duration-200 hover:border-[#b29f7a]"
-            >
-              <p className="text-lg font-semibold text-[#f7f3eb]">
-                Savings Calculator
-              </p>
-              <p className="mt-1 text-sm text-[#d2c7b2]">
-                Estimate how much you need to save each month to hit a goal.
-              </p>
-            </Link>
-          </div>
-        </section>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
