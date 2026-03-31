@@ -61,13 +61,43 @@ export async function generateMetadata({
   const salaryData = getSalaryData(amount);
 
   if (!salaryData) {
-    return { title: "Salary Calculator | CalcTrio" };
+    return {
+      title: "Salary Calculator",
+      description:
+        "Use CalcTrio's salary calculator to convert annual pay into monthly, biweekly, weekly, daily, and hourly amounts.",
+      alternates: {
+        canonical: "/salary",
+      },
+    };
   }
 
   const annualText = formatWholeCurrency(salaryData.annual);
+  const monthlyText = formatCurrency(salaryData.monthly);
+  const biweeklyText = formatCurrency(salaryData.biweekly);
+  const hourlyText = formatCurrency(salaryData.hourly);
+  const pageUrl = `${siteUrl}/salary/${amount}`;
+
+  const title = `${annualText} Salary to Monthly Pay Calculator`;
+  const description = `${annualText} a year is about ${monthlyText} per month, ${biweeklyText} biweekly, and ${hourlyText} per hour. Use CalcTrio's free salary calculator.`;
+
   return {
-    title: `${annualText} Salary is How Much a Month? | CalcTrio`,
-    description: `${annualText} a year is about ${formatCurrency(salaryData.monthly)} per month.`,
+    title,
+    description,
+    alternates: {
+      canonical: `/salary/${amount}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: pageUrl,
+      siteName: "CalcTrio",
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
   };
 }
 
@@ -86,13 +116,17 @@ export default async function SalaryAmountPage({
   const annualText = formatWholeCurrency(salaryData.annual);
   const monthlyText = formatCurrency(salaryData.monthly);
   const biweeklyText = formatCurrency(salaryData.biweekly);
+  const weeklyText = formatCurrency(salaryData.weekly);
   const hourlyText = formatCurrency(salaryData.hourly);
+  const dailyText = formatCurrency(salaryData.daily);
 
   return (
     <main className="min-h-screen bg-[#111111] text-[#f7f3eb]">
       <header className="border-b border-[#201c18] bg-[#0f0f0f]/95">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5">
-          <Link href="/" className="text-lg font-semibold text-[#f7f3eb]">CalcTrio</Link>
+          <Link href="/" className="text-lg font-semibold text-[#f7f3eb]">
+            CalcTrio
+          </Link>
           <nav className="flex gap-5 text-sm text-[#b29f7a]">
             <Link href="/">Home</Link>
             <Link href="/payment">Payment</Link>
@@ -102,16 +136,39 @@ export default async function SalaryAmountPage({
       </header>
 
       <div className="mx-auto w-full max-w-6xl px-6 py-8">
-        <h1 className="text-3xl font-bold mb-6">{annualText} Salary Breakdown</h1>
+        <h1 className="mb-3 text-3xl font-bold">
+          {annualText} Salary Breakdown
+        </h1>
+
+        <p className="mb-6 max-w-2xl text-[#c8c2b5]">
+          See how much {annualText} per year works out to per month, biweekly,
+          weekly, daily, and hourly.
+        </p>
+
         <div className="grid gap-4 rounded-xl border border-[#2a2a2a] bg-[#171717] p-8">
           <div className="flex justify-between border-b border-[#2a2a2a] pb-4">
-            <span>Monthly</span><span className="font-mono text-[#d8b07a]">{monthlyText}</span>
+            <span>Monthly</span>
+            <span className="font-mono text-[#d8b07a]">{monthlyText}</span>
           </div>
+
           <div className="flex justify-between border-b border-[#2a2a2a] pb-4">
-            <span>Bi-Weekly</span><span className="font-mono text-[#d8b07a]">{biweeklyText}</span>
+            <span>Bi-Weekly</span>
+            <span className="font-mono text-[#d8b07a]">{biweeklyText}</span>
           </div>
+
+          <div className="flex justify-between border-b border-[#2a2a2a] pb-4">
+            <span>Weekly</span>
+            <span className="font-mono text-[#d8b07a]">{weeklyText}</span>
+          </div>
+
+          <div className="flex justify-between border-b border-[#2a2a2a] pb-4">
+            <span>Daily</span>
+            <span className="font-mono text-[#d8b07a]">{dailyText}</span>
+          </div>
+
           <div className="flex justify-between">
-            <span>Hourly</span><span className="font-mono text-[#d8b07a]">{hourlyText}</span>
+            <span>Hourly</span>
+            <span className="font-mono text-[#d8b07a]">{hourlyText}</span>
           </div>
         </div>
       </div>

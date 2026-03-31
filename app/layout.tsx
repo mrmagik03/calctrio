@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,29 +15,47 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://calctrio.com"),
+
   title: {
-    default: "CalcTrio | Free Online Financial & Salary Calculators",
+    default: "CalcTrio",
     template: "%s | CalcTrio",
   },
-  description: "Accurate and easy-to-use financial tools, including salary, savings, and payment calculators.",
-  keywords: ["salary calculator", "savings tool", "financial planning", "CalcTrio"],
+
+  description:
+    "Free online calculators for monthly payments, salary conversions, savings growth, and financial planning.",
+
+  keywords: [
+    "monthly payment calculator",
+    "loan calculator",
+    "salary calculator",
+    "savings calculator",
+    "financial calculator",
+    "payment calculator",
+    "CalcTrio",
+  ],
+
   authors: [{ name: "CalcTrio Team" }],
   creator: "CalcTrio",
+
   alternates: {
     canonical: "/",
   },
+
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://calctrio.com",
     siteName: "CalcTrio",
-    title: "CalcTrio | Financial Calculators",
-    description: "Plan your finances with our accurate, free calculators.",
+    title: "CalcTrio",
+    description:
+      "Free online calculators for payments, salary, savings, and financial planning.",
   },
+
   twitter: {
     card: "summary_large_image",
-    title: "CalcTrio | Financial Calculators",
-    description: "Simple tools for complex financial decisions.",
+    title: "CalcTrio",
+    description:
+      "Free online calculators for payments, salary, savings, and financial planning.",
   },
 };
 
@@ -46,8 +65,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col">
+        {/* Google Analytics */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=G-HBE8PKSZ25`}
+          strategy="afterInteractive"
+        />
+
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-HBE8PKSZ25');
+          `}
+        </Script>
+
         {children}
       </body>
     </html>

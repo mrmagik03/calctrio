@@ -1,27 +1,43 @@
 import Link from "next/link";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
-// 1. Explicit Metadata for the Homepage
 export const metadata: Metadata = {
-  title: "Free Online Financial & Salary Calculators", // Overrides the default in layout.tsx
-  description: "Calculate your take-home pay, savings growth, and loan payments with CalcTrio's simple, accurate financial tools.",
+  title: "Financial Calculators for Salary, Savings & Payments",
+  description:
+    "Use CalcTrio's free online calculators to estimate salary conversions, savings goals, and monthly loan or payment costs.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Financial Calculators for Salary, Savings & Payments",
+    description:
+      "Use CalcTrio's free online calculators to estimate salary conversions, savings goals, and monthly loan or payment costs.",
+    url: "https://calctrio.com",
+    siteName: "CalcTrio",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Financial Calculators for Salary, Savings & Payments",
+    description:
+      "Use CalcTrio's free online calculators to estimate salary conversions, savings goals, and monthly loan or payment costs.",
+  },
 };
 
 export default function Home() {
-  // 2. Structured Data (JSON-LD) for Google
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "CalcTrio",
-    "url": "https://calctrio.com",
-    "description": "Simple financial calculators for salary, savings, and payments.",
-    "applicationCategory": "FinanceApplication",
-    "operatingSystem": "All",
+    name: "CalcTrio",
+    url: "https://calctrio.com",
+    description:
+      "Free online financial calculators for salary, savings, and payment planning.",
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "All",
   };
 
   return (
     <main className="min-h-screen flex flex-col justify-between bg-[#111111] text-[#f5f1e8] px-6 py-12">
-      {/* Injecting the Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -33,13 +49,12 @@ export default function Home() {
             Financial Tools
           </p>
 
-          {/* Slightly more descriptive H1 for SEO */}
           <h1 className="mb-4 text-5xl font-bold tracking-tight text-[#f5f1e8]">
             CalcTrio
           </h1>
 
           <p className="mx-auto mb-10 max-w-2xl text-lg text-[#c8c2b5]">
-            Simple financial calculators for real decisions.
+            Free online calculators for salary, savings, and payment planning.
           </p>
 
           <div className="grid gap-4 sm:grid-cols-3">
@@ -69,10 +84,18 @@ export default function Home() {
 
       <footer className="mt-12 text-center text-sm text-[#9f9788]">
         <div className="mb-2 flex justify-center gap-6">
-          <Link href="/about" className="hover:text-[#f5f1e8]">About</Link>
-          <Link href="/methodology" className="hover:text-[#f5f1e8]">Methodology</Link>
-          <Link href="/disclaimer" className="hover:text-[#f5f1e8]">Disclaimer</Link>
-          <Link href="/privacy" className="hover:text-[#f5f1e8]">Privacy</Link>
+          <Link href="/about" className="hover:text-[#f5f1e8]">
+            About
+          </Link>
+          <Link href="/methodology" className="hover:text-[#f5f1e8]">
+            Methodology
+          </Link>
+          <Link href="/disclaimer" className="hover:text-[#f5f1e8]">
+            Disclaimer
+          </Link>
+          <Link href="/privacy" className="hover:text-[#f5f1e8]">
+            Privacy
+          </Link>
         </div>
 
         <p>© {new Date().getFullYear()} CalcTrio</p>

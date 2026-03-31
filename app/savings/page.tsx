@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import SavingsCalculatorClient from "./SavingsCalculatorClient";
 
-const siteUrl = "https://calctrio.co";
+const siteUrl = "https://calctrio.com";
 const pageUrl = `${siteUrl}/savings`;
 
 const faqSchema = {
@@ -13,7 +13,7 @@ const faqSchema = {
       name: "How is monthly savings calculated?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "This calculator uses your goal, time frame, and annual return estimate to work backward into a monthly savings target.",
+        text: "This calculator uses your savings goal, timeline, and estimated annual return to calculate the monthly amount needed to reach your target.",
       },
     },
     {
@@ -21,7 +21,7 @@ const faqSchema = {
       name: "What happens if the return is 0%?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "The math becomes simple monthly saving with no growth. Your goal is divided evenly across the full number of months.",
+        text: "With a 0% return, the calculator divides your savings goal evenly across the total number of months with no growth included.",
       },
     },
     {
@@ -29,7 +29,7 @@ const faqSchema = {
       name: "Is the return guaranteed?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "No. The annual return field is only an estimate used for planning. Real savings and investment results can vary.",
+        text: "No. The annual return is only an estimate for planning purposes. Actual savings or investment growth may be higher or lower.",
       },
     },
   ],
@@ -43,29 +43,29 @@ const webAppSchema = {
   applicationCategory: "FinanceApplication",
   operatingSystem: "Any",
   description:
-    "Calculate monthly savings needed, total contributions, and estimated interest earned with CalcTrio's clean savings calculator.",
+    "Use CalcTrio's savings calculator to estimate monthly savings needed, total contributions, and interest earned toward your goal.",
 };
 
 export const metadata: Metadata = {
-  title: "Savings Calculator | Monthly Savings Goal & Interest Estimate",
+  title: "Savings Calculator: Monthly Goal, Contributions & Interest",
   description:
-    "Calculate monthly savings needed, total contributions, and estimated interest earned with CalcTrio's clean savings calculator.",
+    "Use CalcTrio's savings calculator to estimate monthly savings needed, total contributions, and interest earned toward your goal.",
   alternates: {
     canonical: "/savings",
   },
   openGraph: {
-    title: "Savings Calculator | Monthly Savings Goal & Interest Estimate",
+    title: "Savings Calculator: Monthly Goal, Contributions & Interest",
     description:
-      "Calculate monthly savings needed, total contributions, and estimated interest earned with CalcTrio's clean savings calculator.",
+      "Use CalcTrio's savings calculator to estimate monthly savings needed, total contributions, and interest earned toward your goal.",
     url: pageUrl,
     siteName: "CalcTrio",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "Savings Calculator | Monthly Savings Goal & Interest Estimate",
+    title: "Savings Calculator: Monthly Goal, Contributions & Interest",
     description:
-      "Calculate monthly savings needed, total contributions, and estimated interest earned with CalcTrio's clean savings calculator.",
+      "Use CalcTrio's savings calculator to estimate monthly savings needed, total contributions, and interest earned toward your goal.",
   },
 };
 
