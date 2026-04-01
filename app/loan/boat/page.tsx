@@ -46,11 +46,27 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BoatLoanPage() {
+function getInitialAmount(value: string | string[] | undefined, fallback: number) {
+  const raw = Array.isArray(value) ? value[0] : value;
+  const parsed = Number(raw);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+export default async function BoatLoanPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ amount?: string | string[] }>;
+}) {
+  const params = searchParams ? await searchParams : undefined;
+  const initialAmount = getInitialAmount(params?.amount, category.quickExamples[2]);
+
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <VehicleLoanCalculatorClient category={category} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <VehicleLoanCalculatorClient category={category} initialAmount={initialAmount} />
     </>
   );
 }

@@ -11,15 +11,15 @@ const faqSchema = {
   mainEntity: [
     {
       "@type": "Question",
-      name: "How can a car loan calculator help before shopping?",
+      name: "Why use a car loan calculator before visiting a dealer?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "A car loan calculator helps estimate the monthly payment, total paid, and total interest before you compare models, down payments, or dealership offers.",
+        text: "A car loan calculator helps you estimate the monthly payment before dealer add-ons, taxes, registration, and documentation fees are layered in.",
       },
     },
     {
       "@type": "Question",
-      name: "Does this include taxes, registration, or dealer fees?",
+      name: "Does this include taxes, registration, or insurance?",
       acceptedAnswer: {
         "@type": "Answer",
         text: "No. Results show principal and interest only. Sales tax, registration, documentation fees, and insurance are not included.",
@@ -46,11 +46,27 @@ export const metadata: Metadata = {
   },
 };
 
-export default function CarLoanPage() {
+function getInitialAmount(value: string | string[] | undefined, fallback: number) {
+  const raw = Array.isArray(value) ? value[0] : value;
+  const parsed = Number(raw);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+export default async function CarLoanPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ amount?: string | string[] }>;
+}) {
+  const params = searchParams ? await searchParams : undefined;
+  const initialAmount = getInitialAmount(params?.amount, category.quickExamples[2]);
+
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <VehicleLoanCalculatorClient category={category} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <VehicleLoanCalculatorClient category={category} initialAmount={initialAmount} />
     </>
   );
 }

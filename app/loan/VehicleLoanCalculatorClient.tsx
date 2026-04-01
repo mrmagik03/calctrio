@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import SiteHeader from "../components/SiteHeader";
 import {
   LoanCategory,
@@ -19,31 +18,24 @@ import {
 
 type VehicleLoanCalculatorClientProps = {
   category: LoanCategory;
+  initialAmount?: number;
 };
 
 export default function VehicleLoanCalculatorClient({
   category,
+  initialAmount,
 }: VehicleLoanCalculatorClientProps) {
-  const searchParams = useSearchParams();
-  const initialAmount = useMemo(() => {
-    const raw = searchParams.get("amount");
-    const parsed = raw ? Number(raw) : NaN;
-    if (Number.isFinite(parsed) && parsed > 0) {
-      return formatInputCurrency(parsed.toString());
-    }
-    return formatInputCurrency(category.quickExamples[2].toString());
-  }, [searchParams, category.quickExamples]);
+  const startingAmount =
+    typeof initialAmount === "number" && initialAmount > 0
+      ? initialAmount
+      : category.quickExamples[2];
 
-  const [loan, setLoan] = useState(initialAmount);
+  const [loan, setLoan] = useState(formatInputCurrency(startingAmount.toString()));
   const [rate, setRate] = useState(category.defaultRate.toFixed(2));
   const [years, setYears] = useState(category.defaultYears.toString());
   const [monthly, setMonthly] = useState<number | null>(null);
   const [totalPaid, setTotalPaid] = useState<number | null>(null);
   const [totalInterest, setTotalInterest] = useState<number | null>(null);
-
-  useEffect(() => {
-    setLoan(initialAmount);
-  }, [initialAmount]);
 
   const clearResults = () => {
     setMonthly(null);
@@ -69,9 +61,8 @@ export default function VehicleLoanCalculatorClient({
   };
 
   useEffect(() => {
-    calculate(initialAmount, rate, years);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialAmount]);
+    calculate();
+  }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -84,6 +75,7 @@ export default function VehicleLoanCalculatorClient({
 
   const hasResults =
     monthly !== null && totalPaid !== null && totalInterest !== null;
+
   const principal = parseNumber(loan);
   const annualRate = parseNumber(rate);
   const fullTermMonths = Number(years) * 12;
@@ -106,6 +98,8 @@ export default function VehicleLoanCalculatorClient({
   const siblingCategories = Object.values(loanCategories).filter(
     (item) => item.slug !== category.slug
   );
+
+  const breakdownExamples = category.quickExamples.slice(0, 8);
 
   return (
     <main className="min-h-screen bg-[#111111] text-[#f7f3eb]">
@@ -211,7 +205,7 @@ export default function VehicleLoanCalculatorClient({
               </p>
 
               <div className="grid grid-cols-2 gap-3">
-                {category.quickExamples.map((amount) => (
+                {breakdownExamples.map((amount) => (
                   <Link
                     key={amount}
                     href={`/loan/${category.slug}/${amount}`}
@@ -223,7 +217,7 @@ export default function VehicleLoanCalculatorClient({
               </div>
 
               <p className="mt-4 text-center text-sm leading-6 text-[#9f9486]">
-                Browse the most common full breakdown pages for this category.
+                Browse nearby full breakdown pages for this category.
               </p>
             </div>
           </section>
@@ -273,18 +267,32 @@ export default function VehicleLoanCalculatorClient({
                     Smart Insight
                   </p>
                   <p className="text-sm leading-6 text-[#d2c7b2]">
-                    Paying <span className="font-semibold text-[#f7f3eb]">+$100/month</span> could pay this off <span className="font-semibold text-[#f7f3eb]">{monthsSaved} months sooner</span> and save about <span className="font-semibold text-[#f7f3eb]">{formatCurrency(extraInterestSaved)}</span> in interest.
+                    Paying{" "}
+                    <span className="font-semibold text-[#f7f3eb]">+$100/month</span>{" "}
+                    could pay this off{" "}
+                    <span className="font-semibold text-[#f7f3eb]">
+                      {monthsSaved} months sooner
+                    </span>{" "}
+                    and save about{" "}
+                    <span className="font-semibold text-[#f7f3eb]">
+                      {formatCurrency(extraInterestSaved)}
+                    </span>{" "}
+                    in interest.
                   </p>
                 </div>
 
                 <div className="border border-[#2a2a2a] bg-[#121212] px-5 py-4 text-sm text-[#d2c7b2]">
                   <div className="flex items-center justify-between py-2">
                     <span>Loan amount</span>
-                    <span className="font-medium text-[#f7f3eb]">{formatCurrency(principal)}</span>
+                    <span className="font-medium text-[#f7f3eb]">
+                      {formatCurrency(principal)}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between border-t border-[#232323] py-2">
                     <span>Interest rate</span>
-                    <span className="font-medium text-[#f7f3eb]">{annualRate.toFixed(2)}%</span>
+                    <span className="font-medium text-[#f7f3eb]">
+                      {annualRate.toFixed(2)}%
+                    </span>
                   </div>
                   <div className="flex items-center justify-between border-t border-[#232323] py-2">
                     <span>Loan term</span>
@@ -315,9 +323,9 @@ export default function VehicleLoanCalculatorClient({
               href="/loan"
               className="border border-[#2f2a22] bg-[#141414] px-5 py-4 transition-colors duration-200 hover:border-[#b29f7a]"
             >
-              <p className="text-lg font-semibold text-[#f7f3eb]">Loan Hub</p>
+              <p className="text-lg font-semibold text-[#f7f3eb]">Vehicle Loan Hub</p>
               <p className="mt-1 text-sm text-[#d2c7b2]">
-                Jump back to the vehicle branches and common starting amounts.
+                Jump between car, boat, and RV loan branches.
               </p>
             </Link>
 
