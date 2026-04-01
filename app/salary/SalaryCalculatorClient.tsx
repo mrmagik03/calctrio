@@ -147,7 +147,7 @@ export default function SalaryCalculatorClient() {
                   onChange={(e) => setSalary(sanitizeCurrencyInput(e.target.value))}
                   onBlur={() => setSalary(formatInputCurrency(salary))}
                   onFocus={handleSelectAll}
-                  className="w-full border border-[#2f2a22] bg-[#1b1b1b] py-3 pl-8 pr-4 text-center transition-all duration-200 focus:border-[#b29f7a] focus:outline-none focus:shadow-[0_0_0_3px_rgba(178,159,122,0.12)]"
+                  className="w-full border border-[#2f2a22] bg-[#1b1b1b] text-white py-3 px-4 appearance-none focus:outline-none focus:border-[#b29f7a]"
                 />
               </div>
 

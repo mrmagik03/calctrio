@@ -229,3 +229,13 @@ input::placeholder {
   filter: blur(46px);
   z-index: -1;
 }
+
+select {
+  color-scheme: dark;
+}
+
+select,
+option {
+  background-color: #1b1b1b;
+  color: #ffffff;
+}
