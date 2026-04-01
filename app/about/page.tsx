@@ -15,7 +15,7 @@ export default function AboutPage() {
     <InfoPageShell title="About CalcTrio">
       <p>
         CalcTrio is a simple suite of financial calculators built to help with
-        three core money decisions: understanding income, estimating payments,
+        three core money decisions: understanding income, estimating loans,
         and projecting savings growth.
       </p>
 
@@ -28,8 +28,8 @@ export default function AboutPage() {
 
       <p>
         The salary calculator helps translate annual income into monthly,
-        weekly, and hourly pay. The payment calculator helps estimate common
-        loan and mortgage payments. The savings calculator helps show how
+        weekly, and hourly pay. The loan calculator helps estimate common
+        common loan payments. The savings calculator helps show how
         steady monthly contributions can grow over time.
       </p>
 

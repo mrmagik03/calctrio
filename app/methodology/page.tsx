@@ -32,7 +32,7 @@ export default function MethodologyPage() {
 
       <div>
         <h2 className="mb-2 text-2xl font-semibold text-[#f7f3eb]">
-          Payment Calculator
+          Loan Calculator
         </h2>
         <p>
           Loan payments are calculated using a standard amortization formula

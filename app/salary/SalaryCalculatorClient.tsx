@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import SiteHeader from "../components/SiteHeader";
 
 function formatCurrency(num: number) {
   return num.toLocaleString("en-US", {
@@ -83,43 +84,7 @@ export default function SalaryCalculatorClient() {
 
   return (
     <main className="min-h-screen bg-[#111111] text-[#f7f3eb]">
-      <header className="border-b border-[#201c18] bg-[#0f0f0f]/95">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5">
-          <Link
-            href="/"
-            className="text-lg font-semibold tracking-[0.01em] text-[#f7f3eb] transition-colors duration-200 hover:text-[#d8b07a]"
-          >
-            CalcTrio
-          </Link>
-
-          <nav className="flex items-center gap-5 text-sm text-[#b29f7a]">
-            <Link
-              href="/"
-              className="transition-colors duration-200 hover:text-[#f7f3eb]"
-            >
-              Home
-            </Link>
-            <Link
-              href="/salary"
-              className="transition-colors duration-200 hover:text-[#f7f3eb]"
-            >
-              Salary
-            </Link>
-            <Link
-              href="/payment"
-              className="transition-colors duration-200 hover:text-[#f7f3eb]"
-            >
-              Payment
-            </Link>
-            <Link
-              href="/savings"
-              className="transition-colors duration-200 hover:text-[#f7f3eb]"
-            >
-              Savings
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader />
 
       <div className="mx-auto w-full max-w-6xl px-6 py-8">
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)]">
@@ -333,14 +298,14 @@ export default function SalaryCalculatorClient() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <Link
-              href="/payment"
+              href="/loan"
               className="border border-[#2f2a22] bg-[#141414] px-5 py-4 transition-colors duration-200 hover:border-[#b29f7a]"
             >
               <p className="text-lg font-semibold text-[#f7f3eb]">
-                Payment Calculator
+                Loan Calculator
               </p>
               <p className="mt-1 text-sm text-[#d2c7b2]">
-                Estimate monthly payments and compare total loan costs.
+                Estimate monthly loan payments and compare total loan costs.
               </p>
             </Link>
 

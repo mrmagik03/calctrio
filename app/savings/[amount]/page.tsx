@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import SiteHeader from "../../components/SiteHeader";
 
 const siteUrl = "https://calctrio.com";
 const defaultYears: number = 5;
@@ -253,23 +254,7 @@ export default async function SavingsAmountPage({
       />
 
       <main className="min-h-screen bg-[#111111] text-[#f7f3eb]">
-        <header className="border-b border-[#201c18] bg-[#0f0f0f]/95">
-          <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5">
-            <Link
-              href="/"
-              className="text-lg font-semibold tracking-[0.01em] text-[#f7f3eb] transition-colors duration-200 hover:text-[#d8b07a]"
-            >
-              CalcTrio
-            </Link>
-
-            <nav className="flex items-center gap-5 text-sm text-[#b29f7a]">
-              <Link href="/" className="transition-colors duration-200 hover:text-[#f7f3eb]">Home</Link>
-              <Link href="/salary" className="transition-colors duration-200 hover:text-[#f7f3eb]">Salary</Link>
-              <Link href="/payment" className="transition-colors duration-200 hover:text-[#f7f3eb]">Payment</Link>
-              <Link href="/savings" className="transition-colors duration-200 hover:text-[#f7f3eb]">Savings</Link>
-            </nav>
-          </div>
-        </header>
+        <SiteHeader />
 
         <div className="mx-auto w-full max-w-6xl px-6 py-8">
           <div className="mb-6">
@@ -384,7 +369,7 @@ export default async function SavingsAmountPage({
                 <div className="grid gap-3">
                   <Link href="/savings" className="border border-[#2f2a22] bg-[#141414] px-4 py-3 text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]">Savings calculator</Link>
                   <Link href="/salary" className="border border-[#2f2a22] bg-[#141414] px-4 py-3 text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]">Salary calculator</Link>
-                  <Link href="/payment" className="border border-[#2f2a22] bg-[#141414] px-4 py-3 text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]">Payment calculator</Link>
+                  <Link href="/loan" className="border border-[#2f2a22] bg-[#141414] px-4 py-3 text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]">Loan calculator</Link>
                 </div>
               </div>
             </aside>

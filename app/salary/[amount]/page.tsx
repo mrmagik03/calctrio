@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import SiteHeader from "../../components/SiteHeader";
 
 const siteUrl = "https://calctrio.com";
 
@@ -138,43 +139,7 @@ export default async function SalaryAmountPage({
 
   return (
     <main className="min-h-screen bg-[#111111] text-[#f7f3eb]">
-      <header className="border-b border-[#201c18] bg-[#0f0f0f]/95">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5">
-          <Link
-            href="/"
-            className="text-lg font-semibold tracking-[0.01em] text-[#f7f3eb] transition-colors duration-200 hover:text-[#d8b07a]"
-          >
-            CalcTrio
-          </Link>
-
-          <nav className="flex items-center gap-5 text-sm text-[#b29f7a]">
-            <Link
-              href="/"
-              className="transition-colors duration-200 hover:text-[#f7f3eb]"
-            >
-              Home
-            </Link>
-            <Link
-              href="/salary"
-              className="transition-colors duration-200 hover:text-[#f7f3eb]"
-            >
-              Salary Calculator
-            </Link>
-            <Link
-              href="/payment"
-              className="transition-colors duration-200 hover:text-[#f7f3eb]"
-            >
-              Payment
-            </Link>
-            <Link
-              href="/savings"
-              className="transition-colors duration-200 hover:text-[#f7f3eb]"
-            >
-              Savings
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader />
 
       <div className="mx-auto w-full max-w-6xl px-6 py-8">
         <div className="mb-6">
