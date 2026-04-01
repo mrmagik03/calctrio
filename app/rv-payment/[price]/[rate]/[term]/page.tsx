@@ -13,7 +13,7 @@ type PageProps = {
 };
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://payment-calculator.co";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://calctrio.com";
 
 export async function generateMetadata({
   params,
@@ -83,8 +83,14 @@ export default async function RvPaymentPage({ params }: PageProps) {
             </Link>
 
             <nav className="flex items-center gap-5 text-sm text-neutral-100">
-              <Link href="/" className="hover:text-white">
-                Home
+              <Link href="/loan" className="hover:text-white">
+                Loan Hub
+              </Link>
+              <Link href="/salary" className="hover:text-white">
+                Salary
+              </Link>
+              <Link href="/savings" className="hover:text-white">
+                Savings
               </Link>
               <Link href="/car-payment/50000/6/72" className="hover:text-white">
                 Car

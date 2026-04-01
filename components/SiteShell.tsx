@@ -15,8 +15,12 @@ export default function SiteShell({
           <Link href="/" className="text-sm font-semibold tracking-wide text-white">
             CalcTrio
           </Link>
-          <nav className="flex gap-4 text-sm text-neutral-300">
-            <Link href="/salary/60000/to-hourly" className="hover:text-white">
+
+          <nav className="flex flex-wrap items-center gap-4 text-sm text-neutral-300">
+            <Link href="/loan" className="hover:text-white">
+              Loan
+            </Link>
+            <Link href="/salary" className="hover:text-white">
               Salary
             </Link>
             <Link href="/hourly/25/to-salary" className="hover:text-white">
@@ -28,23 +32,39 @@ export default function SiteShell({
             <Link href="/salary/60000/after-tax" className="hover:text-white">
               After Tax
             </Link>
+            <Link href="/savings" className="hover:text-white">
+              Savings
+            </Link>
           </nav>
         </div>
       </header>
+
       {children}
+
       <footer className="mx-auto w-full max-w-6xl px-4 pb-10 md:px-6">
         <div className="rounded-2xl border border-white/10 bg-white/5 px-6 py-6">
           <h2 className="text-2xl font-semibold text-white">Related tools</h2>
           <p className="mt-3 text-neutral-300">
-            Looking for loan and bill estimates too? Try{" "}
-            <a
-              href="/loan"
+            Explore more calculators across loans, salary, hourly pay, and savings.
+          </p>
+
+          <div className="mt-4 flex flex-wrap gap-4 text-sm">
+            <Link href="/loan" className="underline underline-offset-4 hover:text-white">
+              Loan calculator
+            </Link>
+            <Link href="/salary" className="underline underline-offset-4 hover:text-white">
+              Salary calculator
+            </Link>
+            <Link
+              href="/hourly/25/to-salary"
               className="underline underline-offset-4 hover:text-white"
             >
-              loan calculator
-            </a>
-            .
-          </p>
+              Hourly to salary
+            </Link>
+            <Link href="/savings" className="underline underline-offset-4 hover:text-white">
+              Savings calculator
+            </Link>
+          </div>
         </div>
       </footer>
     </div>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import LinkCard from "@/app/components/LinkCard";
 
 export default function PaymentLinks({
@@ -19,7 +20,7 @@ export default function PaymentLinks({
   const links = [
     {
       href: `${base}/${amount}/${Math.max(3, rate - 1)}/${term}`,
-      title: `${rate - 1}% ${label} payment`,
+      title: `${Math.max(3, rate - 1)}% ${label} payment`,
       description: `See how a lower rate changes the monthly payment.`,
     },
     {
@@ -53,11 +54,13 @@ export default function PaymentLinks({
       </div>
 
       <div className="mt-6 rounded-xl border border-white/25 bg-black/50 p-4">
-        <h3 className="text-base font-semibold text-white">Related tools</h3>
-        <p className="mt-2 text-sm text-neutral-100">
-          For pay and income planning, visit{" "}
-          <a href="https://calctrio.com">CalcTrio salary tools</a>.
-        </p>
+        <h3 className="text-base font-semibold text-white">Related calculators</h3>
+        <div className="mt-3 flex flex-wrap gap-3 text-sm text-neutral-100">
+          <Link href="/loan" className="underline underline-offset-4 hover:text-white">Loan hub</Link>
+          <Link href="/salary" className="underline underline-offset-4 hover:text-white">Salary calculator</Link>
+          <Link href="/salary/60000/after-tax" className="underline underline-offset-4 hover:text-white">After-tax salary</Link>
+          <Link href="/savings" className="underline underline-offset-4 hover:text-white">Savings calculator</Link>
+        </div>
       </div>
     </div>
   );

@@ -100,6 +100,15 @@ export default async function BoatPaymentPage({ params }: PageProps) {
             </Link>
 
             <nav className="flex items-center gap-5 text-sm text-neutral-100">
+              <Link href="/loan" className="hover:text-white">
+                Loan Hub
+              </Link>
+              <Link href="/salary" className="hover:text-white">
+                Salary
+              </Link>
+              <Link href="/savings" className="hover:text-white">
+                Savings
+              </Link>
               <Link href="/car-payment/50000/6/72" className="hover:text-white">
                 Car
               </Link>

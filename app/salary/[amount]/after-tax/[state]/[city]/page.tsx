@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import JsonLd from "@/components/JsonLd";
 import SalaryLocationJump from "@/components/SalaryLocationJump";
-import { getCitiesForState } from "@/lib/cities";
+import { getCityByStateAndSlug, getCitiesForState } from "@/lib/cities";
 import { annualSalaryToHourly, annualSalaryToMonthly, clampSalaryForSeo, formatCurrency, toNumber } from "@/lib/pay";
 import { getStateBySlug, STATES } from "@/lib/states";
 
@@ -13,6 +13,7 @@ type Props = {
   params: Promise<{
     amount: string;
     state: string;
+    city: string;
   }>;
 };
 
@@ -20,46 +21,44 @@ function federalTaxEstimate(amount: number) {
   return amount * 0.18;
 }
 
-function getTaxNotes(stateName: string, stateTaxRate: number) {
-  if (stateTaxRate === 0) {
-    return `${stateName} does not levy a broad statewide wage tax, so this estimate mainly reflects federal taxes. Local payroll deductions, retirement contributions, and benefits can still change your real paycheck.`;
-  }
-  return `${stateName} applies a statewide income tax, so take-home pay here will usually land below a no-income-tax state at the same gross salary. Local payroll taxes, pre-tax benefits, and filing status can still move the final number up or down.`;
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { amount: rawAmount, state: rawState } = await params;
+  const { amount: rawAmount, state: rawState, city: rawCity } = await params;
   const amount = clampSalaryForSeo(toNumber(rawAmount));
   const state = getStateBySlug(rawState);
-
-  if (!state) {
-    return {};
-  }
+  if (!state) return {};
+  const city = getCityByStateAndSlug(state.slug, rawCity);
+  if (!city) return {};
 
   return {
-    title: `${formatCurrency(amount, 0)} After Tax in ${state.name}`,
-    description: `Estimate take-home pay on ${formatCurrency(amount, 0)} in ${state.name}, compare monthly and hourly take-home income, and browse city salary pages.`,
+    title: `${formatCurrency(amount, 0)} After Tax in ${city.name}, ${state.name}`,
+    description: `Estimate take-home pay on ${formatCurrency(amount, 0)} in ${city.name}, ${state.name}, with federal, state, and local tax notes plus nearby city comparisons.`,
     alternates: {
-      canonical: `${SITE_URL}/salary/${amount}/after-tax/${state.slug}`,
+      canonical: `${SITE_URL}/salary/${amount}/after-tax/${state.slug}/${city.slug}`,
     },
   };
 }
 
-export default async function SalaryAfterTaxStatePage({ params }: Props) {
-  const { amount: rawAmount, state: rawState } = await params;
+export default async function SalaryAfterTaxCityPage({ params }: Props) {
+  const { amount: rawAmount, state: rawState, city: rawCity } = await params;
   const amount = clampSalaryForSeo(toNumber(rawAmount));
   const state = getStateBySlug(rawState);
-
   if (!state) notFound();
+  const city = getCityByStateAndSlug(state.slug, rawCity);
+  if (!city) notFound();
 
   const federalTax = federalTaxEstimate(amount);
   const stateTax = amount * state.taxRate;
-  const netAnnual = amount - federalTax - stateTax;
+  const localTax = amount * (city.localTaxRate ?? 0);
+  const netAnnual = amount - federalTax - stateTax - localTax;
   const monthly = annualSalaryToMonthly(netAnnual);
   const biweekly = netAnnual / 26;
   const hourly = annualSalaryToHourly(netAnnual);
   const cities = getCitiesForState(state.slug);
-  const featuredCities = cities.slice(0, 12);
+  const nearbyCities = city.nearby
+    ?.map((slug) => getCityByStateAndSlug(state.slug, slug))
+    .filter(Boolean)
+    .slice(0, 6) ?? [];
+  const moreCities = cities.filter((entry) => entry.slug !== city.slug).slice(0, 10);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -69,36 +68,17 @@ export default async function SalaryAfterTaxStatePage({ params }: Props) {
       { "@type": "ListItem", position: 2, name: "Salary", item: `${SITE_URL}/salary` },
       { "@type": "ListItem", position: 3, name: "After Tax", item: `${SITE_URL}/salary/${amount}/after-tax` },
       { "@type": "ListItem", position: 4, name: state.name, item: `${SITE_URL}/salary/${amount}/after-tax/${state.slug}` },
+      { "@type": "ListItem", position: 5, name: city.name, item: `${SITE_URL}/salary/${amount}/after-tax/${state.slug}/${city.slug}` },
     ],
   };
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: `How much is ${formatCurrency(amount, 0)} after tax in ${state.name}?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `${formatCurrency(amount, 0)} in ${state.name} is roughly ${formatCurrency(netAnnual, 0)} per year after a simple federal and state income tax estimate.`
-        }
-      },
-      {
-        "@type": "Question",
-        name: `Does ${state.name} have state income tax?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: state.taxRate === 0 ? `${state.name} does not currently apply a broad statewide wage income tax.` : `${state.name} does apply a statewide income tax, so take-home pay can be lower than in zero-income-tax states.`
-        }
-      }
-    ]
-  };
+  const summaryText = city.localTaxRate
+    ? `${city.name} adds a local tax layer on top of the ${state.name} estimate, which is why take-home pay here can land lower than the statewide average.`
+    : city.note ?? `${city.name} usually follows the broader ${state.name} income-tax picture, though local payroll deductions and benefits can still move your actual paycheck.`;
 
   return (
     <>
       <JsonLd data={breadcrumbJsonLd} />
-      <JsonLd data={faqJsonLd} />
 
       <main className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-10">
         <nav className="mb-8 text-sm text-zinc-400">
@@ -106,7 +86,9 @@ export default async function SalaryAfterTaxStatePage({ params }: Props) {
           <span className="mx-2">/</span>
           <Link href={`/salary/${amount}/after-tax`} className="hover:text-white">After Tax</Link>
           <span className="mx-2">/</span>
-          <span className="text-zinc-200">{state.name}</span>
+          <Link href={`/salary/${amount}/after-tax/${state.slug}`} className="hover:text-white">{state.name}</Link>
+          <span className="mx-2">/</span>
+          <span className="text-zinc-200">{city.name}</span>
         </nav>
 
         <div className="grid gap-6 lg:grid-cols-[420px_minmax(0,1fr)]">
@@ -114,13 +96,12 @@ export default async function SalaryAfterTaxStatePage({ params }: Props) {
             <h1 className="text-center text-4xl font-semibold tracking-tight text-white">
               {formatCurrency(amount, 0)} After Tax
             </h1>
-
             <p className="mx-auto mt-4 max-w-md text-center text-xl leading-9 text-zinc-200">
-              Compare your estimated take-home pay in <span className="font-semibold text-white">{state.name}</span>.
+              Estimate take-home pay in <span className="font-semibold text-white">{city.name}, {state.name}</span>.
             </p>
 
             <div className="mt-8">
-              <SalaryLocationJump amount={amount} states={STATES} selectedStateSlug={state.slug} cities={cities} />
+              <SalaryLocationJump amount={amount} states={STATES} selectedStateSlug={state.slug} cities={cities} selectedCitySlug={city.slug} />
             </div>
 
             <div className="mt-8">
@@ -132,28 +113,22 @@ export default async function SalaryAfterTaxStatePage({ params }: Props) {
             </div>
 
             <div className="mt-8">
-              <p className="mb-4 text-sm uppercase tracking-[0.18em] text-amber-200/70">Featured cities</p>
+              <p className="mb-4 text-sm uppercase tracking-[0.18em] text-amber-200/70">Nearby city comparisons</p>
               <div className="grid grid-cols-2 gap-3">
-                {featuredCities.map((city) => (
-                  <Link
-                    key={city.slug}
-                    href={`/salary/${amount}/after-tax/${state.slug}/${city.slug}`}
-                    className="flex min-h-[52px] items-center justify-center border border-white/8 px-4 py-3 text-center text-sm text-white transition hover:bg-white/[0.03]"
-                  >
-                    {city.name}
+                {nearbyCities.map((nearby) => (
+                  <Link key={nearby!.slug} href={`/salary/${amount}/after-tax/${state.slug}/${nearby!.slug}`} className="flex min-h-[52px] items-center justify-center border border-white/8 px-4 py-3 text-center text-sm text-white transition hover:bg-white/[0.03]">
+                    {nearby!.name}
                   </Link>
                 ))}
               </div>
             </div>
 
-            <p className="mt-6 text-sm leading-7 text-zinc-400">
-              {getTaxNotes(state.name, state.taxRate)}
-            </p>
+            <p className="mt-6 text-sm leading-7 text-zinc-400">{summaryText}</p>
           </section>
 
           <section className="border border-white/8 bg-white/[0.03] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.35)]">
-            <p className="text-sm uppercase tracking-[0.18em] text-amber-200/70">Clean breakdown</p>
-            <h2 className="mt-3 text-3xl font-semibold text-white">Full take-home picture</h2>
+            <p className="text-sm uppercase tracking-[0.18em] text-amber-200/70">City salary breakdown</p>
+            <h2 className="mt-3 text-3xl font-semibold text-white">{city.name} take-home picture</h2>
 
             <div className="mt-8 border border-white/8 bg-white/[0.02] p-5">
               <p className="text-sm uppercase tracking-[0.18em] text-amber-200/70">Net annual pay</p>
@@ -176,9 +151,9 @@ export default async function SalaryAfterTaxStatePage({ params }: Props) {
             </div>
 
             <div className="mt-5 border border-amber-200/8 bg-amber-100/[0.02] p-5">
-              <p className="text-sm uppercase tracking-[0.18em] text-amber-200/70">How state taxes change this salary</p>
+              <p className="text-sm uppercase tracking-[0.18em] text-amber-200/70">Local tax notes</p>
               <p className="mt-3 text-lg leading-8 text-zinc-200">
-                On a {formatCurrency(amount, 0)} salary in <span className="font-semibold text-white">{state.name}</span>, this simple estimate leaves about <span className="font-semibold text-white">{formatCurrency(netAnnual, 0)}</span> a year after federal taxes and an assumed <span className="font-semibold text-white">{(state.taxRate * 100).toFixed(state.taxRate === 0 ? 0 : 2)}%</span> state tax rate. {cities.length > 0 ? `You can also compare major ${state.name} city pages below to see where local taxes or city-specific notes may matter.` : ""}
+                This {city.name} page starts with a simple federal estimate, layers in the broader {state.name} income tax, and {city.localTaxRate ? `adds an assumed ${(city.localTaxRate * 100).toFixed(2)}% local tax rate` : "does not add a separate local wage tax"}. {summaryText}
               </p>
             </div>
 
@@ -190,24 +165,20 @@ export default async function SalaryAfterTaxStatePage({ params }: Props) {
                 <div className="text-right font-semibold text-white">{formatCurrency(federalTax)}</div>
                 <div className="text-zinc-200">Estimated state tax</div>
                 <div className="text-right font-semibold text-white">{formatCurrency(stateTax)}</div>
+                <div className="text-zinc-200">Estimated local tax</div>
+                <div className="text-right font-semibold text-white">{formatCurrency(localTax)}</div>
                 <div className="text-zinc-200">Estimated net income</div>
                 <div className="text-right font-semibold text-white">{formatCurrency(netAnnual, 0)}</div>
               </div>
             </div>
 
             <div className="mt-5 border border-white/8 bg-white/[0.02] p-5">
-              <h3 className="text-2xl font-semibold text-white">Browse more {state.name} salary pages</h3>
+              <h3 className="text-2xl font-semibold text-white">More {state.name} city pages</h3>
               <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                {featuredCities.map((city) => (
-                  <Link
-                    key={city.slug}
-                    href={`/salary/${amount}/after-tax/${state.slug}/${city.slug}`}
-                    className="border border-white/8 bg-white/[0.02] p-4 transition hover:bg-white/[0.03]"
-                  >
-                    <div className="text-lg font-semibold text-white">{city.name}</div>
-                    <div className="mt-2 text-sm leading-6 text-zinc-300">
-                      Compare take-home pay in {city.name}, {state.name}.
-                    </div>
+                {moreCities.map((entry) => (
+                  <Link key={entry.slug} href={`/salary/${amount}/after-tax/${state.slug}/${entry.slug}`} className="border border-white/8 bg-white/[0.02] p-4 transition hover:bg-white/[0.03]">
+                    <div className="text-lg font-semibold text-white">{entry.name}</div>
+                    <div className="mt-2 text-sm leading-6 text-zinc-300">Compare {formatCurrency(amount, 0)} after tax in {entry.name}, {state.name}.</div>
                   </Link>
                 ))}
               </div>
