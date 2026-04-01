@@ -36,7 +36,39 @@ function formatInputCurrency(value: string) {
   });
 }
 
+function formatState(slug: string) {
+  return slug
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
 const quickExamples = [40000, 50000, 60000, 75000, 100000, 120000];
+
+const states = [
+  "texas",
+  "california",
+  "florida",
+  "new-york",
+  "illinois",
+  "georgia",
+  "north-carolina",
+  "ohio",
+  "pennsylvania",
+  "michigan",
+  "washington",
+  "virginia",
+];
+
+const cities = [
+  { state: "texas", city: "austin", name: "Austin, TX" },
+  { state: "texas", city: "houston", name: "Houston, TX" },
+  { state: "texas", city: "dallas", name: "Dallas, TX" },
+  { state: "california", city: "los-angeles", name: "Los Angeles, CA" },
+  { state: "california", city: "san-diego", name: "San Diego, CA" },
+  { state: "new-york", city: "new-york-city", name: "New York City, NY" },
+  { state: "florida", city: "miami", name: "Miami, FL" },
+  { state: "washington", city: "seattle", name: "Seattle, WA" },
+];
 
 export default function SalaryCalculatorClient() {
   const [salary, setSalary] = useState("60,000.00");
@@ -245,6 +277,68 @@ export default function SalaryCalculatorClient() {
             )}
           </section>
         </div>
+
+        <section className="mt-6 border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.18)]">
+          <div className="mb-6">
+            <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">
+              Explore by location
+            </p>
+            <h2 className="text-3xl font-semibold tracking-tight text-[#f7f3eb]">
+              Compare salary after tax by state and city
+            </h2>
+            <p className="mt-3 text-sm leading-7 text-[#d2c7b2]">
+              Taxes vary by location. Compare your take-home pay across states and
+              major cities to see how far the same salary really goes.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-semibold text-[#f7f3eb]">
+              Popular state pages
+            </h3>
+
+            <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-6">
+              {states.map((state) => (
+                <Link
+                  key={state}
+                  href={`/salary/60000/after-tax/${state}`}
+                  className="border border-[#2f2a22] bg-[#141414] px-3 py-3 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]"
+                >
+                  {formatState(state)}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-10">
+            <h3 className="text-xl font-semibold text-[#f7f3eb]">
+              Popular city pages
+            </h3>
+
+            <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+              {cities.map((city) => (
+                <Link
+                  key={city.name}
+                  href={`/salary/60000/after-tax/${city.state}/${city.city}`}
+                  className="border border-[#2f2a22] bg-[#141414] px-4 py-4 text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]"
+                >
+                  {city.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-10 border border-[#3a3128] bg-[#151311] px-5 py-4">
+            <h3 className="text-xl font-semibold text-[#f7f3eb]">
+              Why compare salary by location?
+            </h3>
+            <p className="mt-3 text-sm leading-7 text-[#d2c7b2]">
+              A salary that looks strong in one state may stretch differently in
+              another after taxes. These location pages make it easier to compare
+              take-home pay faster without guessing.
+            </p>
+          </div>
+        </section>
 
         <section className="mt-6 border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.18)]">
           <div className="mb-6">

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import SalaryCalculatorClient from "./SalaryCalculatorClient";
 
 const siteUrl = "https://calctrio.com";
@@ -21,7 +22,7 @@ const faqSchema = {
       name: "What does biweekly pay mean?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Biweekly pay assumes 26 pay periods per year, which is common for many full-time jobs in the United States.",
+        text: "Biweekly pay assumes 26 pay periods per year, which is common for many full-time jobs.",
       },
     },
     {
@@ -29,7 +30,15 @@ const faqSchema = {
       name: "Is this before or after taxes?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "These results are gross pay estimates. Federal, state, local, and benefit deductions are not included.",
+        text: "These results are gross pay estimates only. Taxes, benefits, and other payroll deductions are not included.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Can I compare salary after tax by state and city?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. CalcTrio includes salary after-tax pages by state and major city so you can compare take-home pay by location.",
       },
     },
   ],
@@ -69,6 +78,38 @@ export const metadata: Metadata = {
   },
 };
 
+const STATES = [
+  "texas",
+  "california",
+  "florida",
+  "new-york",
+  "illinois",
+  "georgia",
+  "north-carolina",
+  "ohio",
+  "pennsylvania",
+  "michigan",
+  "washington",
+  "virginia",
+];
+
+const CITIES = [
+  { state: "texas", city: "austin", name: "Austin, TX" },
+  { state: "texas", city: "houston", name: "Houston, TX" },
+  { state: "texas", city: "dallas", name: "Dallas, TX" },
+  { state: "california", city: "los-angeles", name: "Los Angeles, CA" },
+  { state: "california", city: "san-diego", name: "San Diego, CA" },
+  { state: "new-york", city: "new-york-city", name: "New York City, NY" },
+  { state: "florida", city: "miami", name: "Miami, FL" },
+  { state: "washington", city: "seattle", name: "Seattle, WA" },
+];
+
+function formatState(slug: string) {
+  return slug
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
 export default function SalaryPage() {
   return (
     <>
@@ -84,6 +125,7 @@ export default function SalaryPage() {
           __html: JSON.stringify(faqSchema),
         }}
       />
+
       <SalaryCalculatorClient />
     </>
   );
