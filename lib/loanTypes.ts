@@ -12,7 +12,7 @@ export type LoanTheme = {
 export const LOAN_TYPES: Record<LoanType, LoanTheme> = {
   car: {
     label: "Car",
-    routeBase: "/car-payment",
+    routeBase: "/loan/car",
     heroTitle: "Car payment calculator",
     heroDescription:
       "Estimate monthly car payments based on loan amount, interest rate, and loan term.",
@@ -23,7 +23,7 @@ export const LOAN_TYPES: Record<LoanType, LoanTheme> = {
 
   boat: {
     label: "Boat",
-    routeBase: "/boat-payment",
+    routeBase: "/loan/boat",
     heroTitle: "Boat payment calculator",
     heroDescription:
       "Estimate monthly boat payments with a marine-style calculator.",
@@ -34,7 +34,7 @@ export const LOAN_TYPES: Record<LoanType, LoanTheme> = {
 
   rv: {
     label: "RV",
-    routeBase: "/rv-payment",
+    routeBase: "/loan/rv",
     heroTitle: "RV payment calculator",
     heroDescription:
       "Estimate monthly RV payments for road trips and long-term travel.",

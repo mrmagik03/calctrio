@@ -2,26 +2,19 @@ export async function GET() {
   const base = "https://calctrio.com";
 
   const urls = [
-    "/boat-payment",
-    "/car-payment",
-    "/rv-payment",
+    "/loan",
+    "/loan/car",
+    "/loan/boat",
+    "/loan/rv",
   ];
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls
-  .map(
-    (path) => `
+${urls.map((path) => `
   <url>
     <loc>${base}${path}</loc>
-  </url>`
-  )
-  .join("")}
+  </url>`).join("")}
 </urlset>`;
 
-  return new Response(body, {
-    headers: {
-      "Content-Type": "application/xml",
-    },
-  });
+  return new Response(body, { headers: { "Content-Type": "application/xml" } });
 }

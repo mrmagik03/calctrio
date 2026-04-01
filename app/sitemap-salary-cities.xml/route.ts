@@ -1,34 +1,24 @@
-import { CITY_LOCATIONS } from "@/lib/cities";
+import { getPopularCities, SALARY_GRID } from "@/lib/salary";
 
 export async function GET() {
   const base = "https://calctrio.com";
-  const amounts = [40000, 50000, 60000];
+  const urls: string[] = [];
+  const cities = getPopularCities();
 
-  const urls = [];
-
-  for (const amount of amounts) {
-    for (const city of CITY_LOCATIONS) {
-      urls.push(
-        `/salary/${amount}/after-tax/${city.stateSlug}/${city.slug}`
-      );
+  for (const city of cities) {
+    urls.push(`/salary/location/${city.stateSlug}/${city.slug}`);
+    for (const amount of SALARY_GRID) {
+      urls.push(`/salary/${amount}/${city.stateSlug}/${city.slug}`);
     }
   }
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls
-  .map(
-    (path) => `
+${urls.map((path) => `
   <url>
     <loc>${base}${path}</loc>
-  </url>`
-  )
-  .join("")}
+  </url>`).join("")}
 </urlset>`;
 
-  return new Response(body, {
-    headers: {
-      "Content-Type": "application/xml",
-    },
-  });
+  return new Response(body, { headers: { "Content-Type": "application/xml" } });
 }
