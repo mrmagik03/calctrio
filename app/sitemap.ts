@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 import { genericExamples, loanCategories } from "./loan/loan-data";
+import { STATES } from "@/lib/states";
+import { buildAmountExamples, buildRateExamples, buildTermExamples } from "@/lib/loan";
 
 const baseUrl = "https://calctrio.com";
 
@@ -60,11 +62,106 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
+  const hourlyRoutes: MetadataRoute.Sitemap = [];
+  for (let rate = 10; rate <= 100; rate += 1) {
+    hourlyRoutes.push({
+      url: `${baseUrl}/hourly/${rate}/to-salary`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    });
+  }
+
+  const salaryConversionRoutes: MetadataRoute.Sitemap = [];
+  for (let amount = 10000; amount <= 300000; amount += 1000) {
+    salaryConversionRoutes.push(
+      {
+        url: `${baseUrl}/salary/${amount}/monthly`,
+        lastModified: now,
+        changeFrequency: "weekly",
+        priority: 0.8,
+      },
+      {
+        url: `${baseUrl}/salary/${amount}/biweekly`,
+        lastModified: now,
+        changeFrequency: "weekly",
+        priority: 0.8,
+      },
+      {
+        url: `${baseUrl}/salary/${amount}/to-hourly`,
+        lastModified: now,
+        changeFrequency: "weekly",
+        priority: 0.8,
+      },
+      {
+        url: `${baseUrl}/salary/${amount}/after-tax`,
+        lastModified: now,
+        changeFrequency: "weekly",
+        priority: 0.78,
+      }
+    );
+
+    for (const state of STATES) {
+      salaryConversionRoutes.push({
+        url: `${baseUrl}/salary/${amount}/after-tax/${state.slug}`,
+        lastModified: now,
+        changeFrequency: "weekly",
+        priority: 0.72,
+      });
+    }
+  }
+
+  const paymentRoutes: MetadataRoute.Sitemap = [];
+  for (const amount of buildAmountExamples("car")) {
+    for (const rate of buildRateExamples()) {
+      for (const term of buildTermExamples("car")) {
+        paymentRoutes.push({
+          url: `${baseUrl}/car-payment/${amount}/${rate}/${term}`,
+          lastModified: now,
+          changeFrequency: "weekly",
+          priority: 0.8,
+        });
+      }
+    }
+  }
+
+  for (const amount of buildAmountExamples("boat")) {
+    for (const rate of buildRateExamples()) {
+      for (const term of buildTermExamples("boat")) {
+        paymentRoutes.push({
+          url: `${baseUrl}/boat-payment/${amount}/${rate}/${term}`,
+          lastModified: now,
+          changeFrequency: "weekly",
+          priority: 0.8,
+        });
+      }
+    }
+  }
+
+  const rvAmounts = [40000, 60000, 80000, 100000, 120000];
+  const rvRates = buildRateExamples();
+  const rvTerms = [84, 120, 144, 180, 240];
+  for (const amount of rvAmounts) {
+    for (const rate of rvRates) {
+      for (const term of rvTerms) {
+        paymentRoutes.push({
+          url: `${baseUrl}/rv-payment/${amount}/${rate}/${term}`,
+          lastModified: now,
+          changeFrequency: "weekly",
+          priority: 0.76,
+        });
+      }
+    }
+  }
+
   return [
     ...staticRoutes,
     ...salaryRoutes,
     ...genericLoanRoutes,
     ...categoryRoutes,
     ...savingsRoutes,
+    ...hourlyRoutes,
+    ...salaryConversionRoutes,
+    ...paymentRoutes,
   ];
 }
