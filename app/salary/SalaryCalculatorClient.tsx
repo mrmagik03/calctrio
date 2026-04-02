@@ -7,6 +7,9 @@ import { formatCurrency, getPopularCities, getPopularStates, getSalaryBreakdown 
 
 const featuredStates = getPopularStates();
 const featuredCities = getPopularCities();
+const STATE_ABBR: Record<string, string> = {
+  Alabama: "AL", Alaska: "AK", Arizona: "AZ", Arkansas: "AR", California: "CA", Colorado: "CO", Connecticut: "CT", Delaware: "DE", Florida: "FL", Georgia: "GA", Hawaii: "HI", Idaho: "ID", Illinois: "IL", Indiana: "IN", Iowa: "IA", Kansas: "KS", Kentucky: "KY", Louisiana: "LA", Maine: "ME", Maryland: "MD", Massachusetts: "MA", Michigan: "MI", Minnesota: "MN", Mississippi: "MS", Missouri: "MO", Montana: "MT", Nebraska: "NE", Nevada: "NV", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM", "New York": "NY", "North Carolina": "NC", "North Dakota": "ND", Ohio: "OH", Oklahoma: "OK", Oregon: "OR", Pennsylvania: "PA", "Rhode Island": "RI", "South Carolina": "SC", "South Dakota": "SD", Tennessee: "TN", Texas: "TX", Utah: "UT", Vermont: "VT", Virginia: "VA", Washington: "WA", "West Virginia": "WV", Wisconsin: "WI", Wyoming: "WY", "District of Columbia": "DC",
+};
 
 export default function SalaryCalculatorClient() {
   const preview = getSalaryBreakdown(60000);
@@ -24,29 +27,29 @@ export default function SalaryCalculatorClient() {
 
           <section className="border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.24)]">
             <div className="mb-6">
-              <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">Clean Breakdown</p>
+              <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">Clean breakdown</p>
               <h2 className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">What {formatCurrency(60000, 0)} looks like before taxes</h2>
             </div>
 
             <div className="space-y-4">
               <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
-                <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Monthly Pay</p>
+                <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Monthly pay</p>
                 <p className="text-4xl font-semibold tracking-tight text-[#f7f3eb]">{formatCurrency(preview.monthlyGross)}</p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
-                  <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Biweekly Pay</p>
+                  <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Biweekly pay</p>
                   <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">{formatCurrency(preview.biweeklyGross)}</p>
                 </div>
                 <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
-                  <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Weekly Pay</p>
+                  <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Weekly pay</p>
                   <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">{formatCurrency(preview.weeklyGross)}</p>
                 </div>
               </div>
 
               <div className="border border-[#3a3128] bg-[#151311] px-5 py-4">
-                <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[#b29f7a]">Smart Insight</p>
+                <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[#b29f7a]">Quick reference</p>
                 <p className="text-sm leading-6 text-[#d2c7b2]">
                   A {formatCurrency(60000, 0)} salary works out to about <span className="font-semibold text-[#f7f3eb]">{formatCurrency(preview.hourlyGross)}/hour</span> before taxes on a standard full-time schedule.
                 </p>
@@ -83,8 +86,8 @@ export default function SalaryCalculatorClient() {
             <h3 className="text-xl font-semibold text-[#f7f3eb]">City overviews</h3>
             <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
               {featuredCities.map((city) => (
-                <Link key={`${city.stateSlug}-${city.slug}`} href={`/salary/location/${city.stateSlug}/${city.slug}?amount=60000`} className="border border-[#2f2a22] bg-[#141414] px-4 py-4 text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]">
-                  {city.name}, {city.stateName}
+                <Link key={`${city.stateSlug}-${city.slug}`} href={`/salary/location/${city.stateSlug}/${city.slug}?amount=60000`} className="border border-[#2f2a22] bg-[#141414] px-4 py-4 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]">
+                  {city.name}, {STATE_ABBR[city.stateName] ?? city.stateName}
                 </Link>
               ))}
             </div>

@@ -2,12 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import JsonLd from "@/app/components/JsonLd";
-import CopyResultLinkButton from "@/app/salary/components/CopyResultLinkButton";
 import SalaryCalculatorPanel from "@/app/salary/components/SalaryCalculatorPanel";
 import SalaryPageScaffold from "@/app/salary/components/SalaryPageScaffold";
 import { getCitiesForState } from "@/lib/cities";
 import { getStateBySlug } from "@/lib/states";
-import { buildAmountQuery, formatCurrency, formatWholeCurrency, getCostProfile, getSalaryBreakdown, getStateHeadline, getStateSummary, readAmountParam } from "@/lib/salary";
+import { formatCurrency, formatWholeCurrency, getCostProfile, getSalaryBreakdown, getStateHeadline, getStateSummary, readAmountParam } from "@/lib/salary";
 
 const SITE_URL = "https://calctrio.com";
 
@@ -36,31 +35,32 @@ export default async function SalaryStateOverviewPage({ params, searchParams }: 
   const cities = getCitiesForState(state.slug).slice(0, 8);
   const breakdown = getSalaryBreakdown(amount, state);
   const costProfile = getCostProfile(state);
-  const pageUrl = `${SITE_URL}/salary/location/${state.slug}${buildAmountQuery(amount)}`;
 
   const schema = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
     name: `${state.name} Salary Calculator Overview`,
-    applicationCategory: "FinanceApplication",
-    operatingSystem: "Any",
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Any',
     url: `${SITE_URL}/salary/location/${state.slug}`,
   };
 
   return (
     <>
       <JsonLd data={schema} />
-      <SalaryPageScaffold crumbs={[{ href: "/", label: "Home" }, { href: "/salary", label: "Salary" }, { label: state.name }]}>
+      <SalaryPageScaffold crumbs={[{ href: '/', label: 'Home' }, { href: '/salary', label: 'Salary' }, { label: state.name }]}> 
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)]">
-          <SalaryCalculatorPanel initialAmount={amount} initialStateSlug={state.slug} title={`${state.name} salary overview`} description="Keep your salary active while you move between the state overview, city pages, and exact salary result pages." />
+          <SalaryCalculatorPanel
+            initialAmount={amount}
+            initialStateSlug={state.slug}
+            title={`${state.name} salary overview`}
+            description="Keep your salary active while you move between the state overview, city pages, and exact salary result pages."
+          />
 
           <section className="border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.24)]">
-            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">State overview</p>
-                <h2 className="text-3xl font-semibold tracking-tight text-[#f7f3eb]">{getStateHeadline(state)}</h2>
-              </div>
-              <CopyResultLinkButton url={pageUrl} />
+            <div className="mb-5">
+              <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">State overview</p>
+              <h1 className="text-3xl font-semibold tracking-tight text-[#f7f3eb]">{getStateHeadline(state)}</h1>
             </div>
 
             <div className="space-y-4">
@@ -72,7 +72,7 @@ export default async function SalaryStateOverviewPage({ params, searchParams }: 
               <div className="grid gap-4 sm:grid-cols-3">
                 <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5"><p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Monthly take-home</p><p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">{formatCurrency(breakdown.monthlyNet)}</p></div>
                 <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5"><p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Effective tax rate</p><p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">{(breakdown.effectiveTaxRate * 100).toFixed(1)}%</p></div>
-                <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5"><p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Median benchmark</p><p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">{amount >= 63128 ? "Above" : "Below"} U.S. median</p></div>
+                <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5"><p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Median benchmark</p><p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">{amount >= 63128 ? 'Above' : 'Below'} U.S. median</p></div>
               </div>
 
               <div className="border border-[#3a3128] bg-[#151311] px-5 py-4 text-sm leading-7 text-[#d2c7b2]">

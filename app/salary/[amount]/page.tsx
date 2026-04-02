@@ -50,12 +50,11 @@ export default async function SalaryAmountPage({ params }: Props) {
           <SalaryCalculatorPanel initialAmount={amount} title={`${formatWholeCurrency(amount)} Salary Breakdown`} description="Change the salary, pick a state, or jump into a city page without losing your place." />
 
           <section className="border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.24)]">
-            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+            <div className="mb-5">
               <div>
                 <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">Immediate answer</p>
                 <h2 className="text-3xl font-semibold tracking-tight text-[#f7f3eb]">What {formatWholeCurrency(amount)} looks like before taxes</h2>
               </div>
-              <CopyResultLinkButton url={pageUrl} />
             </div>
 
             <div className="space-y-4">

@@ -19,7 +19,7 @@ export default function SalaryMethodology({
     <section className="mt-6 border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.18)]">
       <div className="mb-5">
         <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">How we calculated this</p>
-        <h2 className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">Estimated deductions behind {locationLabel}</h2>
+        <h2 className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">Estimated deductions for {locationLabel}</h2>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">

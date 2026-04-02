@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import JsonLd from "@/app/components/JsonLd";
-import CopyResultLinkButton from "@/app/salary/components/CopyResultLinkButton";
 import SalaryCalculatorPanel from "@/app/salary/components/SalaryCalculatorPanel";
 import SalaryMethodology from "@/app/salary/components/SalaryMethodology";
 import SalaryPageScaffold from "@/app/salary/components/SalaryPageScaffold";
@@ -35,22 +34,18 @@ export default async function SalaryStateAmountPage({ params }: Props) {
   const costProfile = getCostProfile(state);
   const cities = getCitiesForState(state.slug).slice(0, 8);
   const nearbySalaries = getNearbySalarySteps(amount);
-  const pageUrl = `${SITE_URL}/salary/${amount}/${state.slug}`;
 
   return (
     <>
-      <JsonLd data={{ "@context": "https://schema.org", "@type": "SoftwareApplication", name: `${state.name} Salary After Tax Calculator`, applicationCategory: "FinanceApplication", operatingSystem: "Any", url: pageUrl }} />
-      <SalaryPageScaffold crumbs={[{ href: "/", label: "Home" }, { href: "/salary", label: "Salary" }, { href: `/salary/location/${state.slug}?amount=${amount}`, label: state.name }, { label: formatWholeCurrency(amount) }]}>
+      <JsonLd data={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: `${state.name} Salary After Tax Calculator`, applicationCategory: 'FinanceApplication', operatingSystem: 'Any', url: `${SITE_URL}/salary/${amount}/${state.slug}` }} />
+      <SalaryPageScaffold crumbs={[{ href: '/', label: 'Home' }, { href: '/salary', label: 'Salary' }, { href: `/salary/location/${state.slug}?amount=${amount}`, label: state.name }, { label: formatWholeCurrency(amount) }]}> 
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)]">
           <SalaryCalculatorPanel initialAmount={amount} initialStateSlug={state.slug} title={`${formatWholeCurrency(amount)} in ${state.name}`} description="See this salary in the whole state first, then branch into specific cities if you want local housing and cost pressure." />
 
           <section className="border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.24)]">
-            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">Immediate answer</p>
-                <h2 className="text-3xl font-semibold tracking-tight text-[#f7f3eb]">Estimated take-home in {state.name}</h2>
-              </div>
-              <CopyResultLinkButton url={pageUrl} />
+            <div className="mb-5">
+              <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">Immediate answer</p>
+              <h1 className="text-3xl font-semibold tracking-tight text-[#f7f3eb]">Estimated take-home in {state.name}</h1>
             </div>
 
             <div className="space-y-4">
@@ -62,7 +57,7 @@ export default async function SalaryStateAmountPage({ params }: Props) {
               </div>
               <div className="border border-[#3a3128] bg-[#151311] px-5 py-4 text-sm leading-7 text-[#d2c7b2]">
                 <p>{getStateSummary(state)}</p>
-                <p className="mt-3">This state-level view is the place to understand the tax picture first. Then use the city pages below when rent, local tax, and metro cost pressure matter more than the statewide average.</p>
+                <p className="mt-3">This state-level view is where you get the broad tax picture first. Then use the city pages below when rent, local tax, and metro cost pressure matter more than the statewide average.</p>
                 <p className="mt-3">The broad cost profile for {state.name} is <span className="font-semibold text-[#f7f3eb]">{costProfile.label.toLowerCase()}</span>, with many renters targeting a band near <span className="font-semibold text-[#f7f3eb]">{costProfile.rentBand}</span>.</p>
               </div>
             </div>

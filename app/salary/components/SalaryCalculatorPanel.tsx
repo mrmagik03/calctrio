@@ -32,7 +32,7 @@ export default function SalaryCalculatorPanel({
   initialStateSlug,
   initialCitySlug,
   title = "Salary Calculator",
-  description = "Adjust the salary and location below to keep exploring without leaving the salary tool.",
+  description = "Run the numbers here first, then compare the same salary across different states and cities.",
 }: Props) {
   const router = useRouter();
   const [amountInput, setAmountInput] = useState(formatInput(initialAmount));
@@ -114,7 +114,7 @@ export default function SalaryCalculatorPanel({
           onClick={() => navigate()}
           className="border border-[#4a4034] bg-[#241f19] px-6 py-3 transition-all duration-200 hover:border-[#b29f7a] hover:bg-[#2d271f] active:scale-[0.99]"
         >
-          Update Results
+          Calculate
         </button>
       </div>
 
@@ -129,7 +129,7 @@ export default function SalaryCalculatorPanel({
                 setAmountInput(formatInput(amount));
                 navigate(amount, stateSlug, citySlug);
               }}
-              className="border border-[#2f2a22] bg-[#141414] px-4 py-3 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]"
+              className="flex min-h-[52px] items-center justify-center border border-[#2f2a22] bg-[#141414] px-4 py-3 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]"
             >
               ${amount.toLocaleString()}
             </button>
@@ -150,7 +150,7 @@ export default function SalaryCalculatorPanel({
                   setAmountInput(formatInput(amount));
                   navigate(amount, stateSlug, citySlug);
                 }}
-                className="border border-[#2f2a22] bg-[#141414] px-4 py-3 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]"
+                className="flex min-h-[52px] items-center justify-center border border-[#2f2a22] bg-[#141414] px-4 py-3 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]"
               >
                 ${hourly}/hr
               </button>
