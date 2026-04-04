@@ -208,7 +208,6 @@ export default async function SalaryCityAmountPage({ params }: Props) {
             initialAmount={amount}
             initialStateSlug={state.slug}
             initialCitySlug={city.slug}
-            title={`${formatWholeCurrency(amount)} in ${city.name}`}
             description={`Change the salary or location to see how the same paycheck looks somewhere else without backing out of the calculator.`}
           />
 
