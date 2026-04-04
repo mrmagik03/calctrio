@@ -131,8 +131,22 @@ export const CITY_LOCATIONS: CityTaxLocation[] = [
   { slug: "grand-rapids", name: "Grand Rapids", stateSlug: "michigan", stateName: "Michigan", nearby: ["detroit", "ann-arbor"] },
   { slug: "huntsville", name: "Huntsville", stateSlug: "alabama", stateName: "Alabama", nearby: ["birmingham", "mobile"] },
   { slug: "tallahassee", name: "Tallahassee", stateSlug: "florida", stateName: "Florida", nearby: ["jacksonville", "orlando"] },
-  { slug: "grand-prairie", name: "Grand Prairie", stateSlug: "texas", stateName: "Texas", nearby: ["dallas", "arlington"] }
+  { slug: "grand-prairie", name: "Grand Prairie", stateSlug: "texas", stateName: "Texas", nearby: ["dallas", "arlington"] },
+  { slug: "hartford", name: "Hartford", stateSlug: "connecticut", stateName: "Connecticut" },
+  { slug: "dover", name: "Dover", stateSlug: "delaware", stateName: "Delaware" },
+  { slug: "augusta-maine", name: "Augusta", stateSlug: "maine", stateName: "Maine" },
+  { slug: "jackson-ms", name: "Jackson", stateSlug: "mississippi", stateName: "Mississippi" },
+  { slug: "helena", name: "Helena", stateSlug: "montana", stateName: "Montana" },
+  { slug: "concord", name: "Concord", stateSlug: "new-hampshire", stateName: "New Hampshire" },
+  { slug: "bismarck", name: "Bismarck", stateSlug: "north-dakota", stateName: "North Dakota" },
+  { slug: "providence", name: "Providence", stateSlug: "rhode-island", stateName: "Rhode Island" },
+  { slug: "columbia-sc", name: "Columbia", stateSlug: "south-carolina", stateName: "South Carolina" },
+  { slug: "pierre", name: "Pierre", stateSlug: "south-dakota", stateName: "South Dakota" },
+  { slug: "montpelier", name: "Montpelier", stateSlug: "vermont", stateName: "Vermont" },
+  { slug: "charleston-wv", name: "Charleston", stateSlug: "west-virginia", stateName: "West Virginia" },
+  { slug: "cheyenne", name: "Cheyenne", stateSlug: "wyoming", stateName: "Wyoming" },
 ];
+
 
 export function getCitiesForState(stateSlug: string) {
   return CITY_LOCATIONS.filter((city) => city.stateSlug === stateSlug);

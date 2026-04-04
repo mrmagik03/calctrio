@@ -12,7 +12,7 @@ const STATE_ABBR: Record<string, string> = {
 };
 
 export default function SalaryCalculatorClient() {
-  const preview = getSalaryBreakdown(60000);
+  const preview = getSalaryBreakdown(65000);
 
   return (
     <main className="min-h-screen bg-[#111111] text-[#f7f3eb]">
@@ -20,9 +20,9 @@ export default function SalaryCalculatorClient() {
       <div className="mx-auto w-full max-w-6xl px-6 py-8">
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)]">
           <SalaryCalculatorPanel
-            initialAmount={60000}
+            initialAmount={65000}
             title="Salary Calculator"
-            description="Break your annual salary into clear paycheck views, then carry that number into state and city comparisons."
+            description="Break your annual salary into clear paycheck views, then select city and state for cost of living comparisons."
           />
 
           <section className="border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.24)]">

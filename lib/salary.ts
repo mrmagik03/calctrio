@@ -1,7 +1,7 @@
 import { CITY_LOCATIONS, getCityByStateAndSlug, getCitiesForState, type CityTaxLocation } from "@/lib/cities";
 import { getStateBySlug, type StateTax } from "@/lib/states";
 
-export const DEFAULT_SALARY = 60000;
+export const DEFAULT_SALARY = 65000;
 export const SALARY_GRID = Array.from({ length: 25 }, (_, index) => 30000 + index * 5000);
 export const HOURLY_PRESETS = [20, 25, 30, 40, 50];
 export const POPULAR_STATE_SLUGS = [

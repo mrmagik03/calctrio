@@ -96,6 +96,55 @@ function buildCityBlurb(amount: number, cityName: string, stateName: string, cos
   return `${firstSentence} ${secondSentence}`;
 }
 
+function getMedianRentFromBand(rentBand: string) {
+  const matches = rentBand.match(/\$([\d,]+)[–-]\$([\d,]+)/);
+  if (!matches) return null;
+
+  const low = Number(matches[1].replace(/,/g, ""));
+  const high = Number(matches[2].replace(/,/g, ""));
+  return Math.round((low + high) / 2);
+}
+
+function buildCitySalaryBlurb({
+  amount,
+  cityName,
+  stateTax,
+  localTax,
+  monthlyNet,
+  medianRent,
+  rentBand,
+}: {
+  amount: number;
+  cityName: string;
+  stateTax: number;
+  localTax: number;
+  monthlyNet: number;
+  medianRent: number | null;
+  rentBand: string;
+}) {
+  const taxSentence =
+    stateTax <= 0
+      ? `With no state income tax, more of a ${formatWholeCurrency(amount)} salary stays in your pocket in ${cityName}.`
+      : localTax > 0
+        ? `State and local income taxes both reduce take-home pay on a ${formatWholeCurrency(amount)} salary in ${cityName}.`
+        : `State income tax reduces take-home pay on a ${formatWholeCurrency(amount)} salary in ${cityName}.`;
+
+  if (!medianRent || monthlyNet <= 0) {
+    return `${taxSentence} Rent typically runs ${rentBand}, so housing will be a major factor in how comfortable this income feels.`;
+  }
+
+  const rentRatio = medianRent / monthlyNet;
+
+  const housingSentence =
+    rentRatio >= 0.4
+      ? `Typical rent runs ${rentBand}, which puts real pressure on this income once housing is covered.`
+      : rentRatio >= 0.3
+        ? `Typical rent runs ${rentBand}, so housing will take a meaningful share of take-home pay here.`
+        : `Typical rent runs ${rentBand}, so housing costs are more manageable here than in many higher-cost cities.`;
+
+  return `${taxSentence} ${housingSentence}`;
+}
+
 export default async function SalaryCityAmountPage({ params }: Props) {
   const { amount: rawAmount, state: rawState, city: rawCity } = await params;
   const amount = readAmountParam(rawAmount);
@@ -106,7 +155,17 @@ export default async function SalaryCityAmountPage({ params }: Props) {
   const breakdown = getSalaryBreakdown(amount, state, city);
   const nearbyCities = getNearbyCities(city);
   const costProfile = getCostProfile(state, city);
-  const cityBlurb = buildCityBlurb(amount, city.name, state.name, costProfile.summary, costProfile.rentBand, city.note);
+  const medianRent = getMedianRentFromBand(costProfile.rentBand);
+  const citySalaryBlurb = buildCitySalaryBlurb({
+  amount,
+  cityName: city.name,
+  stateTax: breakdown.stateTax,
+  localTax: breakdown.localTax,
+  monthlyNet: breakdown.monthlyNet,
+  medianRent,
+  rentBand: costProfile.rentBand,
+});
+  
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -154,39 +213,56 @@ export default async function SalaryCityAmountPage({ params }: Props) {
           />
 
           <section className="border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.24)]">
-            <div className="mb-5">
-              <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">Immediate answer</p>
-              <h1 className="text-3xl font-semibold leading-tight tracking-tight text-[#f7f3eb] sm:text-4xl">
-                Estimated take-home for {formatWholeCurrency(amount)} in {city.name}
-              </h1>
-            </div>
+  <div className="mb-5">
+    <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">Cost of living breakdown</p>
+    <h1 className="text-3xl font-semibold leading-tight tracking-tight text-[#f7f3eb] sm:text-4xl">
+      {city.name}, {STATE_ABBREVIATIONS[state.slug] ?? state.name}
+    </h1>
+  </div>
 
-            <div className="space-y-4">
-              <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
-                <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Net annual pay</p>
-                <p className="text-4xl font-semibold tracking-tight text-[#f7f3eb]">{formatCurrency(breakdown.netAnnual, 0)}</p>
-              </div>
+  <div className="space-y-4">
+    <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
+      <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Take-home pay after tax</p>
+      <p className="text-4xl font-semibold tracking-tight text-[#f7f3eb]">{formatCurrency(breakdown.netAnnual, 0)} / year</p>
+    </div>
 
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
-                  <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Monthly take-home</p>
-                  <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">{formatCurrency(breakdown.monthlyNet)}</p>
-                </div>
-                <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
-                  <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Biweekly take-home</p>
-                  <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">{formatCurrency(breakdown.biweeklyNet)}</p>
-                </div>
-                <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
-                  <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Hourly take-home</p>
-                  <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">{formatCurrency(breakdown.hourlyNet)}</p>
-                </div>
-              </div>
+    <div className="grid gap-4 sm:grid-cols-3">
+      <div className="border border-[#2f2a22] bg-[#141414] px-4 py-4 flex flex-col justify-center">
+        <p className="mb-1 text-xs uppercase tracking-[0.12em] text-[#8b826f] whitespace-nowrap">Monthly take-home</p>
+        <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">{formatCurrency(breakdown.monthlyNet, 0)}</p>
+      </div>
+      <div className="border border-[#2f2a22] bg-[#141414] px-4 py-4 flex flex-col justify-center">
+        <p className="mb-1 text-xs uppercase tracking-[0.12em] text-[#8b826f] whitespace-nowrap">Biweekly take-home</p>
+        <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">{formatCurrency(breakdown.biweeklyNet, 0)}</p>
+      </div>
+      <div className="border border-[#2f2a22] bg-[#141414] px-4 py-4 flex flex-col justify-center">
+        <p className="mb-1 text-xs uppercase tracking-[0.12em] text-[#8b826f] whitespace-nowrap">Typical rent</p>
+        <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">
+          {medianRent ? formatCurrency(medianRent, 0) : costProfile.rentBand}
+        </p>
+      </div>
+    </div>
 
-              <div className="border border-[#3a3128] bg-[#151311] px-5 py-4 text-sm leading-7 text-[#d2c7b2]">
-                <p>{cityBlurb}</p>
-              </div>
-            </div>
-          </section>
+    <div className="grid gap-4 sm:grid-cols-2">
+      <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
+        <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">State income tax</p>
+        <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">
+          {breakdown.stateTax > 0 ? formatCurrency(breakdown.stateTax, 0) : "None"}
+        </p>
+      </div>
+      <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
+        <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Local income tax</p>
+        <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">
+          {breakdown.localTax > 0 ? formatCurrency(breakdown.localTax, 0) : "None"}
+        </p>
+      </div>
+    </div>
+
+    <div className="border border-[#3a3128] bg-[#151311] px-5 py-4 text-sm leading-7 text-[#d2c7b2]">
+        <p>{citySalaryBlurb}</p>
+    </div>
+  </div>
+</section>
         </div>
 
         <section className="mt-6 border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.18)]">

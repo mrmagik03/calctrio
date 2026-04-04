@@ -112,7 +112,7 @@ export default function SalaryCalculatorPanel({
         <button
           type="button"
           onClick={() => navigate()}
-          className="border border-[#4a4034] bg-[#241f19] px-6 py-3 transition-all duration-200 hover:border-[#b29f7a] hover:bg-[#2d271f] active:scale-[0.99]"
+          className="w-full border border-[#4a4034] bg-[#241f19] px-6 py-3 transition-all duration-200 hover:border-[#b29f7a] hover:bg-[#2d271f] active:scale-[0.99]"
         >
           Calculate
         </button>
