@@ -31,7 +31,7 @@ export default function SalaryCalculatorPanel({
   initialAmount,
   initialStateSlug,
   initialCitySlug,
-  title = "Salary Calculator",
+  title,
   description = "Run the numbers here first, then compare the same salary across different states and cities.",
 }: Props) {
   const router = useRouter();
@@ -53,8 +53,12 @@ export default function SalaryCalculatorPanel({
 
   return (
     <section className="border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.28)]">
-      <h1 className="mb-3 text-center text-4xl font-bold">{title}</h1>
-      <p className="mb-8 text-center text-lg text-[#d2c7b2]">{description}</p>
+      {title && (
+      <h1 className="mb-3 text-center text-4xl font-bold">
+      {title}
+      </h1>
+      )}
+      <p className="mb-6 text-center text-base text-[#d2c7b2] leading-relaxed">{description}</p>
 
       <div className="mx-auto grid w-full max-w-2xl gap-4 md:grid-cols-2">
         <div className="md:col-span-2">
