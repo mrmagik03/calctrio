@@ -28,7 +28,7 @@ export default function SalaryCalculatorClient() {
           <section className="border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.24)]">
             <div className="mb-6">
               <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">Clean breakdown</p>
-              <h2 className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">What {formatCurrency(60000, 0)} looks like before taxes</h2>
+              <h2 className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">What {formatCurrency(65000, 0)} looks like before taxes</h2>
             </div>
 
             <div className="space-y-4">
@@ -51,12 +51,12 @@ export default function SalaryCalculatorClient() {
               <div className="border border-[#3a3128] bg-[#151311] px-5 py-4">
                 <p className="mb-2 text-xs uppercase tracking-[0.18em] text-[#b29f7a]">Quick reference</p>
                 <p className="text-sm leading-6 text-[#d2c7b2]">
-                  A {formatCurrency(60000, 0)} salary works out to about <span className="font-semibold text-[#f7f3eb]">{formatCurrency(preview.hourlyGross)}/hour</span> before taxes on a standard full-time schedule.
+                  A {formatCurrency(65000, 0)} salary works out to about <span className="font-semibold text-[#f7f3eb]">{formatCurrency(preview.hourlyGross)}/hour</span> before taxes on a standard full-time schedule.
                 </p>
               </div>
 
               <div className="border border-[#2a2a2a] bg-[#121212] px-5 py-4 text-sm text-[#d2c7b2]">
-                <div className="flex items-center justify-between py-2"><span>Annual salary</span><span className="font-medium text-[#f7f3eb]">{formatCurrency(60000, 0)}</span></div>
+                <div className="flex items-center justify-between py-2"><span>Annual salary</span><span className="font-medium text-[#f7f3eb]">{formatCurrency(65000, 0)}</span></div>
                 <div className="flex items-center justify-between border-t border-[#232323] py-2"><span>Monthly pay</span><span className="font-medium text-[#f7f3eb]">{formatCurrency(preview.monthlyGross)}</span></div>
                 <div className="flex items-center justify-between border-t border-[#232323] py-2"><span>Daily pay</span><span className="font-medium text-[#f7f3eb]">{formatCurrency(preview.dailyGross)}</span></div>
               </div>
@@ -75,7 +75,7 @@ export default function SalaryCalculatorClient() {
             <h3 className="text-xl font-semibold text-[#f7f3eb]">State overviews</h3>
             <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-6">
               {featuredStates.map((state) => (
-                <Link key={state.slug} href={`/salary/location/${state.slug}?amount=60000`} className="border border-[#2f2a22] bg-[#141414] px-3 py-3 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]">
+                <Link key={state.slug} href={`/salary/location/${state.slug}?amount=65000`} className="border border-[#2f2a22] bg-[#141414] px-3 py-3 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]">
                   {state.name}
                 </Link>
               ))}
@@ -86,7 +86,7 @@ export default function SalaryCalculatorClient() {
             <h3 className="text-xl font-semibold text-[#f7f3eb]">City overviews</h3>
             <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
               {featuredCities.map((city) => (
-                <Link key={`${city.stateSlug}-${city.slug}`} href={`/salary/location/${city.stateSlug}/${city.slug}?amount=60000`} className="border border-[#2f2a22] bg-[#141414] px-4 py-4 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]">
+                <Link key={`${city.stateSlug}-${city.slug}`} href={`/salary/location/${city.stateSlug}/${city.slug}?amount=65000`} className="border border-[#2f2a22] bg-[#141414] px-4 py-4 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]">
                   {city.name}, {STATE_ABBR[city.stateName] ?? city.stateName}
                 </Link>
               ))}
