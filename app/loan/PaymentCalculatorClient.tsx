@@ -128,14 +128,14 @@ export default function PaymentCalculatorClient() {
           {/* 🔥 FULL BREAKDOWN EXAMPLES */}
           <div className="mt-8 max-w-md mx-auto">
             <p className="mb-3 text-xs uppercase tracking-[0.18em] text-[#8b826f] text-center">
-              Full Breakdown Examples
+              Car Loan Breakdown Examples
             </p>
 
             <div className="grid grid-cols-2 gap-3">
               {nearbyAmounts.map((amount) => (
                 <Link
                   key={amount}
-                  href={`/loan/${amount}`}
+                  href={`/loan/car/${amount}`}
                   className="border border-[#2f2a22] bg-[#141414] px-4 py-3 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]"
                 >
                   ${amount.toLocaleString()}

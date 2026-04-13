@@ -61,7 +61,7 @@ export default function LocationSelect() {
         htmlFor="salary-location-select"
         className="mb-2 block text-sm text-zinc-300"
       >
-        Browse salary after-tax pages by state
+        Browse salary pages by state
       </label>
 
       <select
@@ -81,7 +81,7 @@ export default function LocationSelect() {
         {STATES.map((state) => (
           <option
             key={state.slug}
-            value={`/salary/60000/after-tax/${state.slug}`}
+            value={`/salary/60000/${state.slug}`}
           >
             {state.name}
           </option>

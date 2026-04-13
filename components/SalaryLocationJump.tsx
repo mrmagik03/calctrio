@@ -37,7 +37,7 @@ export default function SalaryLocationJump({
             const next = event.target.value;
             setStateValue(next);
             setCityValue("");
-            if (next) router.push(`/salary/${amount}/after-tax/${next}`);
+            if (next) router.push(`/salary/${amount}/${next}`);
           }}
           className="w-full rounded-none border border-white/10 bg-white/[0.03] px-4 py-4 text-white outline-none transition focus:border-white/20"
         >
@@ -62,7 +62,7 @@ export default function SalaryLocationJump({
               const next = event.target.value;
               setCityValue(next);
               if (next && selectedStateSlug) {
-                router.push(`/salary/${amount}/after-tax/${selectedStateSlug}/${next}`);
+                router.push(`/salary/${amount}/${selectedStateSlug}/${next}`);
               }
             }}
             className="w-full rounded-none border border-white/10 bg-white/[0.03] px-4 py-4 text-white outline-none transition focus:border-white/20"

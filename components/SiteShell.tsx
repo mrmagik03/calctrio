@@ -26,11 +26,8 @@ export default function SiteShell({
             <Link href="/hourly/25/to-salary" className="hover:text-white">
               Hourly
             </Link>
-            <Link href="/salary/60000/biweekly" className="hover:text-white">
-              Biweekly
-            </Link>
-            <Link href="/salary/60000/after-tax" className="hover:text-white">
-              After Tax
+            <Link href="/salary" className="hover:text-white">
+              State Compare
             </Link>
             <Link href="/savings" className="hover:text-white">
               Savings

@@ -8,7 +8,7 @@ type State = {
 
 type ValueLinksProps = {
   amount: number;
-  type?: "salary-after-tax" | "default";
+  type?: "salary-location" | "default";
   currentState?: string;
 };
 
@@ -84,24 +84,24 @@ export default function ValueLinks({
       description: "Estimate each paycheck on a biweekly schedule.",
     },
     {
-      href: `/salary/${amount}/after-tax`,
-      title: "After-tax overview",
-      description: "Compare take-home pay by state.",
+      href: `/salary/${amount}`,
+      title: "State take-home compare",
+      description: "Compare take-home pay across popular states.",
     },
   ];
 
   const otherStates =
-    type === "salary-after-tax"
+    type === "salary-location"
       ? STATES.filter((state) => state.slug !== currentState)
       : [];
 
   return (
     <div className="space-y-10">
       <section>
-        <h2 className="section-title">Explore more salary pages</h2>
+        <h2 className="section-title">Explore more salary views</h2>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-400">
           Use these related pages to compare gross pay, paycheck timing, and
-          take-home estimates.
+          take-home estimates and state comparisons.
         </p>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -116,17 +116,17 @@ export default function ValueLinks({
         </div>
       </section>
 
-      {type === "salary-after-tax" && otherStates.length > 0 && (
+      {type === "salary-location" && otherStates.length > 0 && (
         <section>
           <h2 className="section-title">
-            Compare take-home pay in other states
+            Compare this salary in other states
           </h2>
 
           <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {otherStates.map((state) => (
               <StatePill
                 key={state.slug}
-                href={`/salary/${amount}/after-tax/${state.slug}`}
+                href={`/salary/${amount}/${state.slug}`}
                 label={state.shortName || state.name}
               />
             ))}
