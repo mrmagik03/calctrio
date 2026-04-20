@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import JsonLd from "@/app/components/JsonLd";
 import SalaryCalculatorPanel from "@/app/salary/components/SalaryCalculatorPanel";
-import SalaryMethodology from "@/app/salary/components/SalaryMethodology";
 import SalaryPageScaffold from "@/app/salary/components/SalaryPageScaffold";
 import { getCitiesForState } from "@/lib/cities";
 import { getStateBySlug } from "@/lib/states";
@@ -61,6 +60,24 @@ export default async function SalaryStateAmountPage({ params }: Props) {
                 <p className="mt-3">This state-level view is where you get the broad tax picture first. Then use the city pages below when rent, local tax, and metro cost pressure matter more than the statewide average.</p>
                 <p className="mt-3">The broad cost profile for {state.name} is <span className="font-semibold text-[#f7f3eb]">{costProfile.label.toLowerCase()}</span>, with many renters targeting a band near <span className="font-semibold text-[#f7f3eb]">{costProfile.rentBand}</span>.</p>
               </div>
+
+              <section className="border border-[#2a2a2a] bg-[#171717] px-6 py-5 shadow-[0_12px_32px_rgba(0,0,0,0.18)]">
+                <div className="mb-3"><p className="text-xs uppercase tracking-[0.22em] text-[#8b826f]">Quick deduction estimate</p></div>
+                <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_240px]">
+                  <div className="border border-[#2f2a22] bg-[#141414] px-4 py-2.5 text-sm text-[#d2c7b2]">
+                    <div className="flex items-center justify-between py-1"><span>Federal tax</span><span className="font-medium text-[#f7f3eb]">{formatCurrency(breakdown.federalTax)}</span></div>
+                    <div className="flex items-center justify-between border-t border-[#232323] py-1"><span>State tax</span><span className="font-medium text-[#f7f3eb]">{formatCurrency(breakdown.stateTax)}</span></div>
+                    <div className="flex items-center justify-between border-t border-[#232323] py-1"><span>Local tax</span><span className="font-medium text-[#f7f3eb]">{formatCurrency(breakdown.localTax)}</span></div>
+                    <div className="flex items-center justify-between border-t border-[#232323] py-1"><span>Social Security</span><span className="font-medium text-[#f7f3eb]">{formatCurrency(breakdown.socialSecurity)}</span></div>
+                    <div className="flex items-center justify-between border-t border-[#232323] py-1"><span>Medicare</span><span className="font-medium text-[#f7f3eb]">{formatCurrency(breakdown.medicare)}</span></div>
+                    <div className="flex items-center justify-between border-t border-[#232323] py-1"><span className="font-semibold">Estimated take-home</span><span className="font-semibold text-[#f7f3eb]">{formatCurrency(breakdown.netAnnual, 0)}</span></div>
+                  </div>
+                  <div className="border border-[#3a3128] bg-[#151311] px-4 py-2.5 text-sm leading-6 text-[#d2c7b2]">
+                    <p>Fast read: on {formatWholeCurrency(amount)} in {state.name}, estimated take-home lands around {formatCurrency(breakdown.monthlyNet, 0)} per month after taxes.</p>
+                    <p className="mt-2">That keeps the actual tax hit visible on landing instead of burying it below the fold.</p>
+                  </div>
+                </div>
+              </section>
             </div>
           </section>
         </div>
@@ -83,8 +100,6 @@ export default async function SalaryStateAmountPage({ params }: Props) {
             </div>
           </div>
         </section>
-
-        <SalaryMethodology breakdown={breakdown} stateLabel={state.name} />
       </SalaryPageScaffold>
     </>
   );

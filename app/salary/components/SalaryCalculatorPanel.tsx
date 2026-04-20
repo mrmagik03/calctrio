@@ -70,6 +70,13 @@ export default function SalaryCalculatorPanel({
               value={amountInput}
               onChange={(event) => setAmountInput(parseCurrencyInput(event.target.value))}
               onBlur={() => setAmountInput(formatInput(currentAmount))}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  setAmountInput(formatInput(currentAmount));
+                  navigate(currentAmount, stateSlug, citySlug);
+                }
+              }}
               className="w-full border border-[#2f2a22] bg-[#1b1b1b] py-3 pl-8 pr-4 text-white focus:border-[#b29f7a] focus:outline-none"
             />
           </div>
@@ -115,7 +122,10 @@ export default function SalaryCalculatorPanel({
       <div className="mx-auto mt-5 flex w-full max-w-2xl justify-center">
         <button
           type="button"
-          onClick={() => navigate()}
+          onClick={() => {
+            setAmountInput(formatInput(currentAmount));
+            navigate(currentAmount, stateSlug, citySlug);
+          }}
           className="w-full border border-[#4a4034] bg-[#241f19] px-6 py-3 transition-all duration-200 hover:border-[#b29f7a] hover:bg-[#2d271f] active:scale-[0.99]"
         >
           Calculate

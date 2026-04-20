@@ -54,9 +54,9 @@ export type SalaryBreakdown = {
 };
 
 export function normalizeSalaryInput(value: number): number {
-  const rounded = Math.round(value / 5000) * 5000;
-  if (rounded < 30000) return 30000;
-  if (rounded > 150000) return 150000;
+  const rounded = Math.round(value);
+  if (rounded < 1000) return 1000;
+  if (rounded > 1000000) return 1000000;
   return rounded;
 }
 
@@ -242,8 +242,8 @@ export function getNearbyCities(city: CityTaxLocation, limit = 6): CityTaxLocati
 export function buildSalaryPath(amount?: number | null, stateSlug?: string | null, citySlug?: string | null) {
   if (amount && stateSlug && citySlug) return `/salary/${amount}/${stateSlug}/${citySlug}`;
   if (amount && stateSlug) return `/salary/${amount}/${stateSlug}`;
-  if (stateSlug && citySlug) return `/salary/${stateSlug}/${citySlug}`;
-  if (stateSlug) return `/salary/${stateSlug}`;
+  if (stateSlug && citySlug) return `/salary/location/${stateSlug}/${citySlug}`;
+  if (stateSlug) return `/salary/location/${stateSlug}`;
   if (amount) return `/salary/${amount}`;
   return "/salary";
 }
