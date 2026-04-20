@@ -80,9 +80,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const city = state ? getCityByStateAndSlug(state.slug, rawCity) : null;
   if (!state || !city) return {};
 
+  const breakdown = getSalaryBreakdown(amount, state, city);
+
   return {
-    title: `${formatWholeCurrency(amount)} Salary in ${city.name}, ${state.name}`,
-    description: `Estimate take-home pay on ${formatWholeCurrency(amount)} in ${city.name}, ${state.name}, then compare nearby cities and local cost pressure.`,
+    title: `${formatWholeCurrency(amount)} Salary in ${city.name}, ${STATE_ABBREVIATIONS[state.slug] ?? state.name} → ${formatCurrency(breakdown.monthlyNet, 0)}/mo Take-Home`,
+    description: `See estimated take-home pay on ${formatWholeCurrency(amount)} in ${city.name}, ${state.name}: about ${formatCurrency(breakdown.monthlyNet, 0)} per month after taxes, plus cost of living pressure and nearby city comparisons.`,
     alternates: { canonical: `${SITE_URL}/salary/${amount}/${state.slug}/${city.slug}` },
   };
 }

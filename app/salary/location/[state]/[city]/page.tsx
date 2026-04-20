@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const city = state ? getCityByStateAndSlug(state.slug, rawCity) : null;
   if (!state || !city) return {};
   return {
-    title: `${city.name}, ${state.name} Salary and Cost of Living Overview`,
+    title: `${city.name} Salary Guide → Cost of Living & Take-Home Pay`,
     description: `Explore salary take-home estimates, local cost pressure, and nearby city comparisons for ${city.name}, ${state.name}.`,
     alternates: { canonical: `${SITE_URL}/salary/location/${state.slug}/${city.slug}` },
   };

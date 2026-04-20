@@ -29,11 +29,11 @@ export async function generateMetadata({
   const amount = clampSalaryForSeo(toNumber(rawAmount));
 
   return {
-    title: `${formatCurrency(amount, 0)} Salary to Monthly Pay`,
-    description: `Convert ${formatCurrency(
+    title: `${formatCurrency(amount, 0)} Salary → ${formatCurrency(annualSalaryToMonthly(amount), 0)} a Month Before Tax`,
+    description: `${formatCurrency(
       amount,
       0
-    )} a year to monthly pay and compare it with hourly and biweekly income.`,
+    )} a year is about ${formatCurrency(annualSalaryToMonthly(amount), 0)} per month before taxes, plus ${formatCurrency(annualSalaryToBiweekly(amount))} biweekly and ${formatCurrency(annualSalaryToHourly(amount))}/hour.`,
     alternates: {
       canonical: `${SITE_URL}/salary/${amount}/monthly`,
     },

@@ -22,11 +22,11 @@ export async function generateMetadata({
   const amount = clampSalaryForSeo(toNumber(rawAmount));
 
   return {
-    title: `${formatCurrency(amount, 0)} Salary After Tax by State`,
+    title: `${formatCurrency(amount, 0)} Salary After Tax → Compare Take-Home by State`,
     description: `Compare ${formatCurrency(
       amount,
       0
-    )} salary after tax across states and estimate take-home pay.`,
+    )} salary after tax across states and see where monthly take-home pay lands fastest.`,
     alternates: {
       canonical: `${SITE_URL}/salary/${amount}/after-tax`,
     },

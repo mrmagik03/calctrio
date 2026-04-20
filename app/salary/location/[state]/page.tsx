@@ -20,8 +20,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const state = getStateBySlug(rawState);
   if (!state) return {};
   return {
-    title: `${state.name} Salary Calculator and Take-Home Overview`,
-    description: `Explore salary take-home estimates, state tax impact, and major city comparisons across ${state.name}.`,
+    title: `${state.name} Salary Guide → Compare Take-Home Pay by City`,
+    description: `Compare salary take-home pay, tax impact, and major city salary pages across ${state.name}.`,
     alternates: { canonical: `${SITE_URL}/salary/location/${state.slug}` },
   };
 }

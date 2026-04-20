@@ -22,8 +22,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { rate: rawRate } = await params;
   const rate = clampHourlyForSeo(toNumber(rawRate));
   return {
-    title: `${formatCurrency(rate)} an Hour to Salary`,
-    description: `Convert ${formatCurrency(rate)} an hour to yearly salary, monthly pay, and biweekly pay.`,
+    title: `${formatCurrency(rate)} an Hour → ${formatCurrency(hourlyToAnnualSalary(rate), 0)}/yr Salary`,
+    description: `Convert ${formatCurrency(rate)} an hour to yearly salary, monthly pay, and biweekly pay instantly.`,
     alternates: { canonical: `${SITE_URL}/hourly/${rate}/to-salary` },
   };
 }

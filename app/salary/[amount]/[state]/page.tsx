@@ -18,9 +18,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const amount = readAmountParam(rawAmount);
   const state = getStateBySlug(rawState);
   if (!state) return {};
+  const breakdown = getSalaryBreakdown(amount, state);
   return {
-    title: `${formatWholeCurrency(amount)} Salary After Tax in ${state.name}`,
-    description: `Estimate take-home pay on ${formatWholeCurrency(amount)} in ${state.name}, including state tax impact and major city links.`,
+    title: `${formatWholeCurrency(amount)} Salary in ${state.name} → ${formatCurrency(breakdown.monthlyNet, 0)}/mo Take-Home (2026)`,
+    description: `See estimated take-home pay on ${formatWholeCurrency(amount)} in ${state.name}: about ${formatCurrency(breakdown.monthlyNet, 0)} per month, ${formatCurrency(breakdown.biweeklyNet)} biweekly, and ${formatCurrency(breakdown.hourlyNet)}/hour after taxes in 2026.`,
     alternates: { canonical: `${SITE_URL}/salary/${amount}/${state.slug}` },
   };
 }

@@ -24,12 +24,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const pageUrl = `${SITE_URL}/salary/${amount}`;
 
   return {
-    title: `${formatWholeCurrency(amount)} Salary Calculator Breakdown`,
+    title: `${formatWholeCurrency(amount)} Salary → ${formatCurrency(amount / 12, 0)}/mo (${formatCurrency(amount / 2080)}/hr) + Take-Home Estimate`,
     description: `${formatWholeCurrency(amount)} per year is about ${formatCurrency(
-      amount / 12
+      amount / 12,
+      0
     )} per month, ${formatCurrency(amount / 26)} biweekly, and ${formatCurrency(
       amount / 2080
-    )}/hour before taxes.`,
+    )}/hour before taxes. See the monthly, hourly, and quick take-home estimate in one view.`,
     alternates: { canonical: pageUrl },
   };
 }

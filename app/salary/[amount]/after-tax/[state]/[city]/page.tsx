@@ -29,9 +29,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const city = getCityByStateAndSlug(state.slug, rawCity);
   if (!city) return {};
 
+  const federalTax = federalTaxEstimate(amount);
+  const stateTax = amount * state.taxRate;
+  const localTax = amount * (city.localTaxRate ?? 0);
+  const netAnnual = amount - federalTax - stateTax - localTax;
+
   return {
-    title: `${formatCurrency(amount, 0)} After Tax in ${city.name}, ${state.name}`,
-    description: `Estimate take-home pay on ${formatCurrency(amount, 0)} in ${city.name}, ${state.name}, with federal, state, and local tax notes plus nearby city comparisons.`,
+    title: `${formatCurrency(amount, 0)} After Tax in ${city.name}, ${(state.aliases?.[0] ?? state.name).toUpperCase()} → ${formatCurrency(annualSalaryToMonthly(netAnnual), 0)}/mo`,
+    description: `See estimated take-home pay on ${formatCurrency(amount, 0)} in ${city.name}, ${state.name}: about ${formatCurrency(annualSalaryToMonthly(netAnnual), 0)} per month after federal, state, and local taxes.`,
     alternates: {
       canonical: `${SITE_URL}/salary/${amount}/after-tax/${state.slug}/${city.slug}`,
     },

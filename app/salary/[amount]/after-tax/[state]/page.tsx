@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import StateJumpSelect from "./StateJumpSelect";
+
+const SITE_URL = "https://calctrio.com";
 
 type Props = {
   params: Promise<{
@@ -8,6 +11,27 @@ type Props = {
     state: string;
   }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { amount: rawAmount, state: rawState } = await params;
+
+  const amount = parseAmount(rawAmount);
+  const stateKey = rawState.toLowerCase();
+  const stateName = STATE_NAMES[stateKey];
+  const stateTaxRate = STATE_TAX_RATES[stateKey];
+
+  if (!amount || !stateName || stateTaxRate === undefined) return {};
+
+  const federalTax = federalTaxEstimate(amount);
+  const stateTax = amount * stateTaxRate;
+  const netAnnual = amount - federalTax - stateTax;
+
+  return {
+    title: `${formatCurrency(amount)} After Tax in ${stateName} → ${formatCurrency(Math.round(netAnnual / 12))}/mo Take-Home`,
+    description: `See estimated take-home pay on ${formatCurrency(amount)} in ${stateName}: about ${formatCurrency(Math.round(netAnnual / 12))} per month after taxes, plus state tax notes and city links for faster comparison.`,
+    alternates: { canonical: `${SITE_URL}/salary/${amount}/after-tax/${stateKey}` },
+  };
+}
 
 const STATE_TAX_RATES: Record<string, number> = {
   alabama: 0.05,
