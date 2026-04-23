@@ -29,11 +29,12 @@ export async function generateMetadata({
   const amount = clampSalaryForSeo(toNumber(rawAmount));
 
   return {
-    title: `${formatCurrency(amount, 0)} Salary → ${formatCurrency(annualSalaryToMonthly(amount), 0)} a Month Before Tax`,
+    title: `${formatCurrency(amount, 0)} Salary Breakdown → ${formatCurrency(annualSalaryToMonthly(amount), 0)} a Month Before Tax`,
     description: `${formatCurrency(
       amount,
       0
     )} a year is about ${formatCurrency(annualSalaryToMonthly(amount), 0)} per month before taxes, plus ${formatCurrency(annualSalaryToBiweekly(amount))} biweekly and ${formatCurrency(annualSalaryToHourly(amount))}/hour.`,
+    robots: { index: false, follow: true },
     alternates: {
       canonical: `${SITE_URL}/salary/${amount}/monthly`,
     },
@@ -155,7 +156,7 @@ export default async function SalaryToMonthlyPage({ params }: PageProps) {
 
           <section className="gap-sections grid gap-6 lg:grid-cols-[1.4fr_0.9fr]">
             <div className="section-card">
-              <h2 className="text-2xl font-semibold">Salary to monthly breakdown</h2>
+              <h2 className="text-2xl font-semibold">Monthly paycheck breakdown</h2>
 
               <div className="table-wrap">
                 <div className="table-head">

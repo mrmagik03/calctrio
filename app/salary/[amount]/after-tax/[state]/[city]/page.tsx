@@ -37,6 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${formatCurrency(amount, 0)} After Tax in ${city.name}, ${(state.aliases?.[0] ?? state.name).toUpperCase()} → ${formatCurrency(annualSalaryToMonthly(netAnnual), 0)}/mo`,
     description: `See estimated take-home pay on ${formatCurrency(amount, 0)} in ${city.name}, ${state.name}: about ${formatCurrency(annualSalaryToMonthly(netAnnual), 0)} per month after federal, state, and local taxes.`,
+    robots: { index: false, follow: true },
     alternates: {
       canonical: `${SITE_URL}/salary/${amount}/after-tax/${state.slug}/${city.slug}`,
     },

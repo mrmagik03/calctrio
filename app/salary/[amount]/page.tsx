@@ -24,13 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const pageUrl = `${SITE_URL}/salary/${amount}`;
 
   return {
-    title: `${formatWholeCurrency(amount)} Salary → ${formatCurrency(amount / 12, 0)}/mo (${formatCurrency(amount / 2080)}/hr) + Take-Home Estimate`,
-    description: `${formatWholeCurrency(amount)} per year is about ${formatCurrency(
-      amount / 12,
-      0
-    )} per month, ${formatCurrency(amount / 26)} biweekly, and ${formatCurrency(
-      amount / 2080
-    )}/hour before taxes. See the monthly, hourly, and quick take-home estimate in one view.`,
+    title: `${formatWholeCurrency(amount)} Salary Breakdown – ${formatCurrency(amount / 12, 0)}/mo + Take-Home Estimate`,
+    description: `${formatWholeCurrency(amount)} per year is about ${formatCurrency(amount / 12, 0)} per month before taxes. See monthly, biweekly, and hourly equivalents plus a quick take-home estimate in one place.`,
     alternates: { canonical: pageUrl },
   };
 }
@@ -66,24 +61,24 @@ export default async function SalaryAmountPage({ params }: Props) {
           <SalaryCalculatorPanel
             initialAmount={amount}
             title={`${formatWholeCurrency(amount)} Salary Breakdown`}
-            description="Change the salary, pick a state, or jump into a city page without losing your place."
+            description="Start with the raw salary math here, then jump into a state or city page to see what the paycheck really feels like after taxes."
           />
 
           <div className="space-y-4">
             <section className="border border-[#2a2a2a] bg-[#171717] px-6 py-6 shadow-[0_12px_32px_rgba(0,0,0,0.24)]">
               <div className="mb-4">
                 <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">
-                  Immediate answer
+                  Fast answer
                 </p>
                 <h2 className="text-3xl font-semibold tracking-tight text-[#f7f3eb]">
-                  What {formatWholeCurrency(amount)} looks like before taxes
+                  {formatWholeCurrency(amount)} breaks down to about {formatCurrency(breakdown.monthlyGross)} a month
                 </h2>
               </div>
 
               <div className="space-y-3">
                 <div className="border border-[#2f2a22] bg-[#141414] px-5 py-4">
                   <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">
-                    Monthly gross pay
+                    Monthly pay before tax
                   </p>
                   <p className="text-4xl font-semibold tracking-tight text-[#f7f3eb]">
                     {formatCurrency(breakdown.monthlyGross)}
@@ -93,7 +88,7 @@ export default async function SalaryAmountPage({ params }: Props) {
                 <div className="grid gap-3 sm:grid-cols-3">
                   <div className="border border-[#2f2a22] bg-[#141414] px-4 py-4">
                     <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">
-                      Biweekly
+                      Per paycheck
                     </p>
                     <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">
                       {formatCurrency(breakdown.biweeklyGross)}
@@ -111,7 +106,7 @@ export default async function SalaryAmountPage({ params }: Props) {
 
                   <div className="border border-[#2f2a22] bg-[#141414] px-4 py-4">
                     <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">
-                      Hourly
+                      Hourly equivalent
                     </p>
                     <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">
                       {formatCurrency(breakdown.hourlyGross)}
@@ -121,8 +116,7 @@ export default async function SalaryAmountPage({ params }: Props) {
 
                 <div className="border border-[#3a3128] bg-[#151311] px-4 py-3 text-sm leading-6 text-[#d2c7b2]">
                   <p>
-                    Quick gross-pay view first. Then we show a simple take-home
-                    estimate underneath.
+                    Start with the simple conversion first. Then use the take-home estimate below to see what this salary may actually leave you with after taxes.
                   </p>
                 </div>
               </div>
@@ -131,7 +125,7 @@ export default async function SalaryAmountPage({ params }: Props) {
             <section className="border border-[#2a2a2a] bg-[#171717] px-6 py-5 shadow-[0_12px_32px_rgba(0,0,0,0.18)]">
               <div className="mb-3">
                 <p className="text-xs uppercase tracking-[0.22em] text-[#8b826f]">
-                  Quick deduction estimate
+                  Quick take-home estimate
                 </p>
               </div>
 
@@ -182,13 +176,10 @@ export default async function SalaryAmountPage({ params }: Props) {
 
                 <div className="border border-[#3a3128] bg-[#151311] px-4 py-2.5 text-sm leading-6 text-[#d2c7b2]">
                   <p>
-                    Quick rule of thumb: on a {formatWholeCurrency(amount)} salary,
-                    take-home usually lands somewhere in the mid{" "}
-                    {formatWholeCurrency(breakdown.netAnnual).slice(0, -4)} range
-                    after taxes.
+                    A rough take-home estimate on {formatWholeCurrency(amount)} is about {formatCurrency(breakdown.monthlyNet, 0)} per month after taxes, before benefits, retirement contributions, or local deductions.
                   </p>
                   <p className="mt-2">
-                    This is just a fast estimate to make the number feel real.
+                    Use a state or city page next if you want a more grounded answer tied to local taxes and cost pressure. Make the number feel real.
                   </p>
                   <p className="mt-2">
                     Pick a state or city to tighten it up.

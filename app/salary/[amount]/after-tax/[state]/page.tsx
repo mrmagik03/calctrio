@@ -29,6 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${formatCurrency(amount)} After Tax in ${stateName} → ${formatCurrency(Math.round(netAnnual / 12))}/mo Take-Home`,
     description: `See estimated take-home pay on ${formatCurrency(amount)} in ${stateName}: about ${formatCurrency(Math.round(netAnnual / 12))} per month after taxes, plus state tax notes and city links for faster comparison.`,
+    robots: { index: false, follow: true },
     alternates: { canonical: `${SITE_URL}/salary/${amount}/after-tax/${stateKey}` },
   };
 }

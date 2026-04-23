@@ -240,11 +240,11 @@ export function getNearbyCities(city: CityTaxLocation, limit = 6): CityTaxLocati
 }
 
 export function buildSalaryPath(amount?: number | null, stateSlug?: string | null, citySlug?: string | null) {
-  if (amount && stateSlug && citySlug) return `/salary/${amount}/${stateSlug}/${citySlug}`;
-  if (amount && stateSlug) return `/salary/${amount}/${stateSlug}`;
-  if (stateSlug && citySlug) return `/salary/location/${stateSlug}/${citySlug}`;
-  if (stateSlug) return `/salary/location/${stateSlug}`;
-  if (amount) return `/salary/${amount}`;
+  const safeAmount = normalizeSalaryInput(amount ?? 65000);
+
+  if (stateSlug && citySlug) return `/salary/${safeAmount}/${stateSlug}/${citySlug}`;
+  if (stateSlug) return `/salary/${safeAmount}/${stateSlug}`;
+  if (amount) return `/salary/${safeAmount}`;
   return "/salary";
 }
 

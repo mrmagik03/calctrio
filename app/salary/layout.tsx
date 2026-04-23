@@ -1,6 +1,6 @@
 export const metadata = {
-  title: "Salary Calculator",
-  description: "Convert your salary into monthly, weekly, and hourly pay.",
+  title: "Salary Calculator & Take-Home Pay",
+  description: "Estimate take-home pay and compare salary by month, paycheck, state, and city.",
 };
 
 export default function Layout({

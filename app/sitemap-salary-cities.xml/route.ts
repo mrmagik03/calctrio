@@ -6,10 +6,8 @@ export async function GET() {
   const cities = getPopularCities();
 
   for (const city of cities) {
-    urls.add(`/salary/location/${city.stateSlug}/${city.slug}`);
     for (const amount of SALARY_GRID) {
       urls.add(`/salary/${amount}/${city.stateSlug}/${city.slug}`);
-      urls.add(`/salary/${amount}/after-tax/${city.stateSlug}/${city.slug}`);
     }
   }
 

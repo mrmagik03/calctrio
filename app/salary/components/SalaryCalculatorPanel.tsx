@@ -32,7 +32,7 @@ export default function SalaryCalculatorPanel({
   initialStateSlug,
   initialCitySlug,
   title,
-  description = "Run the numbers here first, then compare the same salary across different states and cities.",
+  description = "Enter a salary, then jump straight into the state or city view you care about.",
 }: Props) {
   const router = useRouter();
   const [amountInput, setAmountInput] = useState(formatInput(initialAmount));
@@ -92,7 +92,7 @@ export default function SalaryCalculatorPanel({
             }}
             className="w-full border border-[#2f2a22] bg-[#1b1b1b] px-4 py-3 text-white focus:border-[#b29f7a] focus:outline-none"
           >
-            <option value="">No state selected</option>
+            <option value="">Choose a state</option>
             {STATES.map((state) => (
               <option key={state.slug} value={state.slug}>
                 {state.name}
@@ -109,7 +109,7 @@ export default function SalaryCalculatorPanel({
             disabled={!stateSlug}
             className="w-full border border-[#2f2a22] bg-[#1b1b1b] px-4 py-3 text-white disabled:opacity-50 focus:border-[#b29f7a] focus:outline-none"
           >
-            <option value="">No city selected</option>
+            <option value="">Choose a city</option>
             {cities.map((city) => (
               <option key={city.slug} value={city.slug}>
                 {city.name}
@@ -128,7 +128,7 @@ export default function SalaryCalculatorPanel({
           }}
           className="w-full border border-[#4a4034] bg-[#241f19] px-6 py-3 transition-all duration-200 hover:border-[#b29f7a] hover:bg-[#2d271f] active:scale-[0.99]"
         >
-          Calculate
+          See result
         </button>
       </div>
 

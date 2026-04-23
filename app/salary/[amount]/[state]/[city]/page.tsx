@@ -82,8 +82,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const breakdown = getSalaryBreakdown(amount, state, city);
 
   return {
-    title: `${formatWholeCurrency(amount)} Salary in ${city.name}, ${STATE_ABBREVIATIONS[state.slug] ?? state.name} → ${formatCurrency(breakdown.monthlyNet, 0)}/mo Take-Home`,
-    description: `See estimated take-home pay on ${formatWholeCurrency(amount)} in ${city.name}, ${state.name}: about ${formatCurrency(breakdown.monthlyNet, 0)} per month after taxes, plus cost of living pressure and nearby city comparisons.`,
+    title: `${formatWholeCurrency(amount)} Salary in ${city.name} – ${formatCurrency(breakdown.monthlyNet, 0)}/mo After Tax (2026)`,
+    description: `See what ${formatWholeCurrency(amount)} looks like in ${city.name}, ${state.name}, including monthly take-home pay, rent pressure, and nearby city comparisons.`,
     alternates: { canonical: `${SITE_URL}/salary/${amount}/${state.slug}/${city.slug}` },
   };
 }
@@ -138,10 +138,10 @@ function buildCitySalaryBlurb({
 
   const housingSentence =
     rentRatio >= 0.4
-      ? `Typical rent runs ${rentBand}, which puts real pressure on this income once housing is covered.`
+      ? `Typical monthly rent runs ${rentBand}, which puts real pressure on this income once housing is covered.`
       : rentRatio >= 0.3
-        ? `Typical rent runs ${rentBand}, so housing will take a meaningful share of take-home pay here.`
-        : `Typical rent runs ${rentBand}, so housing costs are more manageable here than in many higher-cost cities.`;
+        ? `Typical monthly rent runs ${rentBand}, so housing will take a meaningful share of take-home pay here.`
+        : `Typical monthly rent runs ${rentBand}, so housing costs are more manageable here than in many higher-cost cities.`;
 
   return `${taxSentence} ${housingSentence}`;
 }
@@ -199,8 +199,8 @@ export default async function SalaryCityAmountPage({ params }: Props) {
         crumbs={[
           { href: '/', label: 'Home' },
           { href: '/salary', label: 'Salary' },
-          { href: `/salary/location/${state.slug}`, label: state.name },
-          { href: `/salary/location/${state.slug}/${city.slug}?amount=${amount}`, label: city.name },
+          { href: `/salary/${amount}/${state.slug}`, label: state.name },
+          { href: `/salary/${amount}/${state.slug}/${city.slug}`, label: city.name },
           { label: formatWholeCurrency(amount) },
         ]}
       >
@@ -209,12 +209,12 @@ export default async function SalaryCityAmountPage({ params }: Props) {
             initialAmount={amount}
             initialStateSlug={state.slug}
             initialCitySlug={city.slug}
-            description={`Change the salary or location to see how the same paycheck looks somewhere else without backing out of the calculator.`}
+            description={`Change the salary or city here to compare the same paycheck somewhere else without backing out of the page.`}
           />
 
           <section className="border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.24)]">
   <div className="mb-5">
-    <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">Cost of living breakdown</p>
+    <p className="mb-2 text-xs uppercase tracking-[0.22em] text-[#8b826f]">Exact result</p>
     <h1 className="text-3xl font-semibold leading-tight tracking-tight text-[#f7f3eb] sm:text-4xl">
       {city.name}, {STATE_ABBREVIATIONS[state.slug] ?? state.name}
     </h1>
@@ -222,8 +222,8 @@ export default async function SalaryCityAmountPage({ params }: Props) {
 
   <div className="space-y-4">
     <div className="border border-[#2f2a22] bg-[#141414] px-5 py-5">
-      <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Take-home pay after tax</p>
-      <p className="text-4xl font-semibold tracking-tight text-[#f7f3eb]">{formatCurrency(breakdown.netAnnual, 0)} / year</p>
+      <p className="mb-1 text-xs uppercase tracking-[0.18em] text-[#8b826f]">You take home about</p>
+      <p className="text-4xl font-semibold tracking-tight text-[#f7f3eb]">{formatCurrency(breakdown.netAnnual, 0)} per year</p>
     </div>
 
     <div className="grid gap-4 sm:grid-cols-3">
@@ -236,7 +236,7 @@ export default async function SalaryCityAmountPage({ params }: Props) {
         <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">{formatCurrency(breakdown.biweeklyNet, 0)}</p>
       </div>
       <div className="border border-[#2f2a22] bg-[#141414] px-4 py-4 flex flex-col justify-center">
-        <p className="mb-1 text-xs uppercase tracking-[0.12em] text-[#8b826f] whitespace-nowrap">Typical rent</p>
+        <p className="mb-1 text-xs uppercase tracking-[0.12em] text-[#8b826f] whitespace-nowrap">Typical monthly rent</p>
         <p className="text-2xl font-semibold tracking-tight text-[#f7f3eb]">
           {medianRent ? formatCurrency(medianRent, 0) : costProfile.rentBand}
         </p>
@@ -264,7 +264,7 @@ export default async function SalaryCityAmountPage({ params }: Props) {
 
     <section className="border border-[#2a2a2a] bg-[#171717] px-6 py-5 shadow-[0_12px_32px_rgba(0,0,0,0.18)]">
       <div className="mb-3">
-        <p className="text-xs uppercase tracking-[0.22em] text-[#8b826f]">Quick deduction estimate</p>
+        <p className="text-xs uppercase tracking-[0.22em] text-[#8b826f]">Where the money goes</p>
       </div>
 
       <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_240px]">
@@ -279,7 +279,7 @@ export default async function SalaryCityAmountPage({ params }: Props) {
 
         <div className="border border-[#3a3128] bg-[#151311] px-4 py-2.5 text-sm leading-6 text-[#d2c7b2]">
           <p>Fast read: on {formatWholeCurrency(amount)} in {city.name}, estimated take-home lands around {formatCurrency(breakdown.monthlyNet, 0)} per month after taxes.</p>
-          <p className="mt-2">That keeps the tax hit, rent pressure, and spendable monthly number visible without making you scroll to the bottom first.</p>
+          <p className="mt-2">That puts your paycheck, tax hit, and rent pressure up front so you can judge the number fast.</p>
         </div>
       </div>
     </section>

@@ -29,11 +29,12 @@ export async function generateMetadata({
   const amount = clampSalaryForSeo(toNumber(rawAmount));
 
   return {
-    title: `${formatCurrency(amount, 0)} Salary → ${formatCurrency(annualSalaryToBiweekly(amount))} Biweekly Before Tax`,
+    title: `${formatCurrency(amount, 0)} Salary Breakdown → ${formatCurrency(annualSalaryToBiweekly(amount))} Biweekly Before Tax`,
     description: `${formatCurrency(
       amount,
       0
     )} a year is about ${formatCurrency(annualSalaryToBiweekly(amount))} every two weeks before taxes, plus ${formatCurrency(annualSalaryToMonthly(amount), 0)} monthly and ${formatCurrency(annualSalaryToHourly(amount))}/hour.`,
+    robots: { index: false, follow: true },
     alternates: {
       canonical: `${SITE_URL}/salary/${amount}/biweekly`,
     },
@@ -156,7 +157,7 @@ export default async function SalaryToBiweeklyPage({ params }: PageProps) {
 
           <section className="gap-sections grid gap-6 lg:grid-cols-[1.4fr_0.9fr]">
             <div className="section-card">
-              <h2 className="text-2xl font-semibold">Salary to biweekly breakdown</h2>
+              <h2 className="text-2xl font-semibold">Biweekly paycheck breakdown</h2>
 
               <div className="table-wrap">
                 <div className="table-head">

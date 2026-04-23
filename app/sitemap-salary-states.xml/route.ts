@@ -6,17 +6,11 @@ export async function GET() {
 
   for (const amount of SALARY_GRID) {
     urls.add(`/salary/${amount}`);
-    urls.add(`/salary/${amount}/monthly`);
-    urls.add(`/salary/${amount}/biweekly`);
-    urls.add(`/salary/${amount}/to-hourly`);
-    urls.add(`/salary/${amount}/after-tax`);
   }
 
   for (const state of POPULAR_STATE_SLUGS) {
-    urls.add(`/salary/location/${state}`);
     for (const amount of SALARY_GRID) {
       urls.add(`/salary/${amount}/${state}`);
-      urls.add(`/salary/${amount}/after-tax/${state}`);
     }
   }
 

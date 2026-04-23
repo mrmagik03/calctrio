@@ -5,9 +5,9 @@ import SalaryCalculatorClient from "@/app/salary/SalaryCalculatorClient";
 const SITE_URL = "https://calctrio.com";
 
 export const metadata: Metadata = {
-  title: "Salary Calculator → Take-Home Pay by State, Month & Hour",
+  title: "Salary Calculator for Take-Home Pay, Monthly Pay & City Comparisons",
   description:
-    "Convert annual salary into monthly, biweekly, weekly, and hourly pay, then compare take-home pay across states and cities instantly.",
+    "Estimate take-home pay, convert salary into monthly and hourly views, and compare the same income across states and cities.",
   alternates: {
     canonical: `${SITE_URL}/salary`,
   },
