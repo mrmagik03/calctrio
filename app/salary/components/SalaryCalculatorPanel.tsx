@@ -54,9 +54,9 @@ export default function SalaryCalculatorPanel({
   return (
     <section className="border border-[#2a2a2a] bg-[#171717] px-8 py-8 shadow-[0_12px_32px_rgba(0,0,0,0.28)]">
       {title && (
-      <h1 className="mb-3 text-center text-4xl font-bold">
-      {title}
-      </h1>
+        <h1 className="mb-3 text-center text-4xl font-bold">
+          {title}
+        </h1>
       )}
       <p className="mb-6 text-center text-base text-[#d2c7b2] leading-relaxed">{description}</p>
 
@@ -119,6 +119,7 @@ export default function SalaryCalculatorPanel({
         </div>
       </div>
 
+      {/* Middle-ground bold "SEE RESULT" button */}
       <div className="mx-auto mt-5 flex w-full max-w-2xl justify-center">
         <button
           type="button"
@@ -126,12 +127,13 @@ export default function SalaryCalculatorPanel({
             setAmountInput(formatInput(currentAmount));
             navigate(currentAmount, stateSlug, citySlug);
           }}
-          className="w-full border border-[#4a4034] bg-[#241f19] px-6 py-3 transition-all duration-200 hover:border-[#b29f7a] hover:bg-[#2d271f] active:scale-[0.99]"
+          className="w-full border border-[#b29f7a] bg-[#b29f7a] px-8 py-5 text-2xl font-bold tracking-wider text-[#111111] transition-all hover:brightness-110"
         >
-          See result
+          SEE RESULT
         </button>
       </div>
 
+      {/* Quick salary examples */}
       <div className="mx-auto mt-6 w-full max-w-2xl">
         <p className="mb-3 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Quick salary examples</p>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
@@ -143,7 +145,7 @@ export default function SalaryCalculatorPanel({
                 setAmountInput(formatInput(amount));
                 navigate(amount, stateSlug, citySlug);
               }}
-              className="flex min-h-[52px] items-center justify-center border border-[#2f2a22] bg-[#141414] px-4 py-3 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]"
+              className="flex min-h-[52px] items-center justify-center border border-[#b29f7a] bg-[#141414] px-4 py-3 text-center text-sm font-medium text-[#d2c7b2] transition-all hover:bg-[#b29f7a] hover:text-[#111111]"
             >
               ${amount.toLocaleString()}
             </button>
@@ -151,6 +153,7 @@ export default function SalaryCalculatorPanel({
         </div>
       </div>
 
+      {/* Hourly benchmarks */}
       <div className="mx-auto mt-6 w-full max-w-2xl">
         <p className="mb-3 text-xs uppercase tracking-[0.18em] text-[#8b826f]">Common hourly benchmarks</p>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
@@ -164,7 +167,7 @@ export default function SalaryCalculatorPanel({
                   setAmountInput(formatInput(amount));
                   navigate(amount, stateSlug, citySlug);
                 }}
-                className="flex min-h-[52px] items-center justify-center border border-[#2f2a22] bg-[#141414] px-4 py-3 text-center text-sm text-[#d2c7b2] transition-colors duration-200 hover:border-[#b29f7a] hover:text-[#f7f3eb]"
+                className="flex min-h-[52px] items-center justify-center border border-[#b29f7a] bg-[#141414] px-4 py-3 text-center text-sm font-medium text-[#d2c7b2] transition-all hover:bg-[#b29f7a] hover:text-[#111111]"
               >
                 ${hourly}/hr
               </button>
