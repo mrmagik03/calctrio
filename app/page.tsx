@@ -3,53 +3,53 @@ import type { Metadata } from "next";
 import SiteFooter from "./components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "Financial Calculators for Salary, Loans & Savings",
+  title: "Salary Calculator: See What Your Pay Is Worth in Any City + What You Can Actually Buy",
   description:
-    "Use CalcTrio's free online calculators to estimate salary conversions, loan payments, and savings goals.",
+    "Enter your salary → instantly compare take-home pay across US cities → see what cars, vacations, or savings that difference actually buys you. One connected trio of tools.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Financial Calculators for Salary, Loans & Savings",
+    title: "Salary Calculator: See What Your Pay Is Worth in Any City + What You Can Actually Buy",
     description:
-      "Use CalcTrio's free online calculators to estimate salary conversions, loan payments, and savings goals.",
+      "Enter your salary → instantly compare take-home pay across US cities → see what cars, vacations, or savings that difference actually buys you.",
     url: "https://calctrio.com",
     siteName: "CalcTrio",
     type: "website",
   },
   twitter: {
-    card: "summary",
-    title: "Financial Calculators for Salary, Loans & Savings",
+    card: "summary_large_image",
+    title: "Salary Calculator: See What Your Pay Is Worth in Any City + What You Can Actually Buy",
     description:
-      "Use CalcTrio's free online calculators to estimate salary conversions, loan payments, and savings goals.",
+      "Enter your salary → instantly compare take-home pay across US cities → see what cars, vacations, or savings that difference actually buys you.",
   },
 };
 
 const trioCards = [
   {
     href: "/salary",
-    kicker: "Income",
-    title: "Salary Calculator",
+    kicker: "Step 1 — Income",
+    title: "Salary Breakdown",
     description:
-      "Convert annual pay into monthly, biweekly, weekly, hourly, and daily numbers.",
+      "Turn your annual salary into monthly, biweekly, and hourly pay. See exact take-home after taxes.",
     className:
       "border-[#2f2a22] bg-[linear-gradient(180deg,rgba(28,25,21,0.74),rgba(18,16,14,0.92)),url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center hover:border-[#a89a7a]",
   },
   {
-    href: "/loan",
-    kicker: "Loans",
-    title: "Loan Calculator",
+    href: "/salary",
+    kicker: "Step 2 — Location",
+    title: "City Cost Comparison",
     description:
-      "Start broad or head straight into car, boat, and RV loan calculations.",
+      "Same salary, different city. See how far your money actually goes in Houston vs. NYC vs. Austin.",
     className:
       "border-[#3c3328] bg-[linear-gradient(180deg,rgba(34,30,24,0.74),rgba(20,18,15,0.92)),url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center hover:border-[#b79a6a]",
   },
   {
     href: "/savings",
-    kicker: "Goals",
-    title: "Savings Calculator",
+    kicker: "Step 3 — Lifestyle",
+    title: "What Can You Actually Buy?",
     description:
-      "Estimate how much you need to save each month to reach a target on time.",
+      "Take the difference and instantly see what car, vacation, watch, or future savings that money buys.",
     className:
       "border-[#2f2a22] bg-[linear-gradient(180deg,rgba(28,25,21,0.74),rgba(18,16,14,0.92)),url('https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center hover:border-[#a89a7a]",
   },
@@ -62,7 +62,7 @@ export default function Home() {
     name: "CalcTrio",
     url: "https://calctrio.com",
     description:
-      "Free online financial calculators for salary, loans, and savings planning.",
+      "Connected salary, cost-of-living, and lifestyle calculators. See what your pay is really worth and what it can buy.",
     applicationCategory: "FinanceApplication",
     operatingSystem: "All",
   };
@@ -79,19 +79,17 @@ export default function Home() {
           <div className="mx-auto w-full max-w-5xl rounded-[28px] border border-[#2a2a2a] bg-[#171717] px-8 py-14 shadow-[0_20px_80px_rgba(0,0,0,0.45)]">
             <div className="mx-auto max-w-3xl text-center">
               <p className="mb-4 text-sm uppercase tracking-[0.35em] text-[#a89a7a]">
-                Financial Tools
+                The Connected Trio
               </p>
 
-              <h1 className="mb-4 text-5xl font-bold tracking-tight text-[#f5f1e8]">
-                CalcTrio
+              <h1 className="mb-6 text-5xl font-bold tracking-tight text-[#f5f1e8]">
+                Your Salary.<br />Your City.<br />Your Lifestyle.
               </h1>
 
-              <p className="mx-auto mb-3 max-w-2xl text-lg text-[#c8c2b5]">
-                Three tools for salary analysis, loan planning, and savings goals.
-              </p>
-
-              <p className="mx-auto mb-10 max-w-2xl text-base leading-7 text-[#a99f90]">
-                Start with the area that matches the decision you are making right now, then move naturally into related tools without bouncing across different sites.
+              <p className="mx-auto mb-10 max-w-2xl text-xl leading-8 text-[#c8c2b5]">
+                Enter your salary once.<br />
+                See what it’s really worth after taxes and cost of living.<br />
+                Then instantly see what car, vacation, or savings that extra money buys you.
               </p>
             </div>
 
